@@ -35,7 +35,13 @@ export default async function Header() {
     <header className="shadow">
       <section className="flex items-center py-4 gap-x-4 container">
         <Link href="/">
-          <Image src="/logo.png" alt="Movie" width={40} height={40} loading="eager" />
+          <Image
+            src="/logo.png"
+            alt="Movie"
+            width={40}
+            height={40}
+            loading="eager"
+          />
         </Link>
         <NavigationMenu className="max-md:hidden">
           <NavigationMenuList>
@@ -47,7 +53,7 @@ export default async function Header() {
                     {categories.map((item: any) => (
                       <NavigationMenuLink key={item._id} asChild>
                         <li>
-                          <Link href={item.slug}>{item.name}</Link>
+                          <Link href={`/the-loai/${item.slug}`}>{item.name}</Link>
                         </li>
                       </NavigationMenuLink>
                     ))}
@@ -63,7 +69,9 @@ export default async function Header() {
                     {countries.map((item: any) => (
                       <NavigationMenuLink key={item._id} asChild>
                         <li>
-                          <Link href={item.slug}>{item.name}</Link>
+                          <Link href={`/quoc-gia/${item.slug}`}>
+                            {item.name}
+                          </Link>
                         </li>
                       </NavigationMenuLink>
                     ))}

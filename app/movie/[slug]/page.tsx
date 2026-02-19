@@ -1,4 +1,5 @@
 import MoviePlayer from "@/components/movie/player";
+import Trailer from "@/components/movie/trailer";
 import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
@@ -51,6 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { slug } = await params;
   const movie = await getMovie(slug);
+  console.log("movie: ", movie);
 
   return (
     <section className="container py-10">
@@ -74,8 +76,15 @@ export default async function Page({ params }: Props) {
           })}
         </BreadcrumbList>
       </Breadcrumb>
-      <MoviePlayer movie={movie.item} className="mb-10" />
-      <h2>{movie.item.name}</h2>
+      {movie.item.status === "trailer" ? (
+        <Trailer movie={movie.item} className="mb-10" />
+      ) : (
+        <MoviePlayer movie={movie.item} className="mb-10" />
+      )}
+
+      <h2>
+        {movie.item.status === "trailer" ? "Trailer" : ""} {movie.item.name}
+      </h2>
       <p className="mb-4 text-muted-foreground">{movie.item.origin_name}</p>
       <p>
         {`Chất lượng: `}{" "}
@@ -96,6 +105,8 @@ export default async function Page({ params }: Props) {
         {`Quốc gia: ${movie.item.country.map((item: any) => item.name).join(", ")}`}
       </p>
       <p>{`Năm phát hành: ${movie.item.year}`}</p>
+      <p>{`Diễn viên: ${movie.item.actor.filter((item: string) => !!item).join(", ")}`}</p>
+      <p>{`Đạo diễn: ${movie.item?.director?.join(", ")}`}</p>
       <div
         dangerouslySetInnerHTML={{ __html: movie.item.content }}
         className="mt-4"
