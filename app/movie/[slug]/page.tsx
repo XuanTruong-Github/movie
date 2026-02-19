@@ -52,7 +52,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { slug } = await params;
   const movie = await getMovie(slug);
-  console.log("movie: ", movie);
 
   return (
     <section className="container py-10">
