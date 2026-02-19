@@ -8,7 +8,6 @@ import {
   NavigationMenuTrigger,
 } from "../ui/navigation-menu";
 import Link from "next/link";
-import { Input } from "../ui/input";
 import {
   InputGroup,
   InputGroupAddon,
@@ -53,7 +52,9 @@ export default async function Header() {
                     {categories.map((item: any) => (
                       <NavigationMenuLink key={item._id} asChild>
                         <li>
-                          <Link href={`/the-loai/${item.slug}`}>{item.name}</Link>
+                          <Link href={`/the-loai/${item.slug}`}>
+                            {item.name}
+                          </Link>
                         </li>
                       </NavigationMenuLink>
                     ))}
@@ -79,6 +80,22 @@ export default async function Header() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
             ) : null}
+
+            <NavigationMenuItem className="px-2">
+              <NavigationMenuLink href="/danh-sach/phim-lẻ">
+                Phim lẻ
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem className="px-2">
+              <NavigationMenuLink href="/danh-sach/phim-bo">
+                Phim bộ
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem className="px-2">
+              <NavigationMenuLink href="/danh-sach/phim-chieu-rap">
+                Phim chiếu rạp
+              </NavigationMenuLink>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
         <form action="/search" className="ml-auto flex-1 max-w-sm">

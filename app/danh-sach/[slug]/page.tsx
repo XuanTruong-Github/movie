@@ -14,7 +14,7 @@ async function getMovies(
 ) {
   try {
     const searchParams = new URLSearchParams(params as any).toString();
-    const response = await api(`/the-loai/${slug}?${searchParams}`);
+    const response = await api(`/danh-sach/${slug}?${searchParams}`);
     if (!response.ok) throw new Error(response.statusText);
     const { data } = await response.json();
     return data;

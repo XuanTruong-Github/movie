@@ -1,3 +1,4 @@
+import CommonPagination from "@/components/common/pagination";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/configs/api";
 import { Metadata } from "next";
@@ -12,8 +13,8 @@ async function getMovies(
   },
 ) {
   try {
-    const _params = new URLSearchParams(params as any).toString();
-    const response = await api(`/quoc-gia/${slug}?${_params}`);
+    const searchParams = new URLSearchParams(params as any).toString();
+    const response = await api(`/quoc-gia/${slug}?${searchParams}`);
     if (!response.ok) throw new Error(response.statusText);
     const { data } = await response.json();
     return data;
@@ -25,11 +26,15 @@ async function getMovies(
 
 type Props = {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page: string; limit: string }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
   const { slug } = await params;
-  const movie = await getMovies(slug);
+  const movie = await getMovies(slug, (await searchParams) as any);
 
   return {
     title: movie.seoOnPage.titleHead,
@@ -47,10 +52,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page({ params, searchParams }: Props) {
   const { slug } = await params;
-  const data = await getMovies(slug);
-  console.log("data: ", data);
+  const data = await getMovies(slug, (await searchParams) as any);
+  const { pagination } = data.params;
   return (
     <section className="container py-10">
       <h2 className="mb-4 md:mb-6 lg:mb-10">{data.titlePage}</h2>
@@ -58,7 +63,7 @@ export default async function Page({ params }: Props) {
         <p>Không có phim nào</p>
       ) : (
         <>
-          <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <ul className="grid mb-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {data.items.map((item: any) => (
               <li key={item._id} className="group">
                 <Link
@@ -88,6 +93,7 @@ export default async function Page({ params }: Props) {
               </li>
             ))}
           </ul>
+          <CommonPagination data={pagination} />
         </>
       )}
     </section>

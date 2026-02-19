@@ -39,7 +39,7 @@ export default async function Home() {
 
   return (
     <section className="container py-6">
-      <h3 className="mb-4 text-primary">Best Movies</h3>
+      <h2 className="mb-4 lg:mb-6">Phim mới nhất</h2>
       <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {data.items.map((item: any) => (
           <li key={item._id} className="group">
