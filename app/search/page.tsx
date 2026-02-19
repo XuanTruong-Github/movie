@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { api } from "@/configs/api";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -18,7 +19,9 @@ async function search(keyword: string) {
 type Props = {
   searchParams: Promise<{ q: string }>;
 };
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: Props): Promise<Metadata> {
   const { q } = await searchParams;
   const movie = await search(q);
 
@@ -31,7 +34,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       title: movie.seoOnPage.titleHead,
       description: movie.seoOnPage.descriptionHead,
       url: movie.seoOnPage.og_url,
-      images:  movie.seoOnPage.og_image.map((img: string) => ({
+      images: movie.seoOnPage.og_image.map((img: string) => ({
         url: `${movie.APP_DOMAIN_CDN_IMAGE}${img}`,
       })),
     },
@@ -47,28 +50,36 @@ export default async function Page({ searchParams }: Props) {
         <p>Không tìm thấy kết quả</p>
       ) : (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {data.items.map((item: any) => (
-              <Link
-                key={item._id}
-                href={`/movie/${item.slug}`}
-                className="group"
-                title={item.name}
-              >
-                <div className="border mb-2 overflow-hidden group-hover:bg-neutral-900 group-hover:opacity-70" >
+              <li key={item._id} className="group">
+                <Link
+                  href={`/movie/${item.slug}`}
+                  className="inline-block w-full hover:opacity-80 mb-2 aspect-[0.75] overflow-y-hidden relative"
+                  title={item.name}
+                >
                   <Image
                     src={`${data.APP_DOMAIN_CDN_IMAGE}/uploads/movies/${item.thumb_url}`}
                     alt={item.name}
-                    className="w-full object-contain group-hover:scale-105 duration-300 aspect-[0.75]"
                     width={320}
                     height={320}
+                    sizes="100vw"
+                    className="w-full object-contain"
                     loading="lazy"
                   />
-                </div>
-                <p>{item.name}</p>
-              </Link>
+                  <Badge className="absolute font-semibold top-0 right-0 z-10 rounded-none">
+                    {item.episode_current}
+                  </Badge>
+                </Link>
+                <p className="text-sm/normal group-hover:text-primary">
+                  {item.name}
+                </p>
+                <p className="text-xs/normal text-muted-foreground">
+                  {item.origin_name}
+                </p>
+              </li>
             ))}
-          </div>
+          </ul>
         </>
       )}
     </section>

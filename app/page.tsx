@@ -1,11 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { api } from "@/configs/api";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -43,17 +36,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const data = await getData();
-  console.log("data: ", data);
 
   return (
     <section className="container py-6">
       <h3 className="mb-4 text-primary">Best Movies</h3>
-      <ul className="grid grid-cols-2 gap-6">
+      <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {data.items.map((item: any) => (
-          <li key={item._id}>
+          <li key={item._id} className="group">
             <Link
               href={`/movie/${item.slug}`}
-              className="inline-block w-full hover:opacity-80 rounded mb-2 aspect-[0.75] overflow-hidden relative"
+              className="inline-block w-full hover:opacity-80 mb-2 aspect-[0.75] overflow-y-hidden relative"
               title={item.name}
             >
               <Image
@@ -69,7 +61,7 @@ export default async function Home() {
                 {item.episode_current}
               </Badge>
             </Link>
-            <p className="text-sm/normal">{item.name}</p>
+            <p className="text-sm/normal group-hover:text-primary">{item.name}</p>
             <p className="text-xs/normal text-muted-foreground">
               {item.origin_name}
             </p>
