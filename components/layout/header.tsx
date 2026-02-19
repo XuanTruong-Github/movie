@@ -13,8 +13,16 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "../ui/input-group";
-import { Search } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import Image from "next/image";
+import { Button } from "../ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
 
 async function getMenu(type: string) {
   try {
@@ -82,17 +90,26 @@ export default async function Header() {
             ) : null}
 
             <NavigationMenuItem className="px-2">
-              <NavigationMenuLink href="/danh-sach/phim-lẻ">
+              <NavigationMenuLink
+                href="/danh-sach/phim-lẻ"
+                className="text-nowrap"
+              >
                 Phim lẻ
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem className="px-2">
-              <NavigationMenuLink href="/danh-sach/phim-bo">
+              <NavigationMenuLink
+                href="/danh-sach/phim-bo"
+                className="text-nowrap"
+              >
                 Phim bộ
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem className="px-2">
-              <NavigationMenuLink href="/danh-sach/phim-chieu-rap">
+              <NavigationMenuLink
+                href="/danh-sach/phim-chieu-rap"
+                className="text-nowrap"
+              >
                 Phim chiếu rạp
               </NavigationMenuLink>
             </NavigationMenuItem>
@@ -106,6 +123,40 @@ export default async function Header() {
             </InputGroupAddon>
           </InputGroup>
         </form>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" className="md:hidden">
+              <Menu />
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>
+                <Image
+                  src="/logo.png"
+                  alt="Movie"
+                  width={32}
+                  height={32}
+                  loading="eager"
+                />
+              </SheetTitle>
+            </SheetHeader>
+            <nav className="flex flex-col items-start gap-5 px-4">
+              <Link
+                href="/danh-sach/phim-chieu-rap"
+                className="hover:text-primary"
+              >
+                Phim chiếu rạp
+              </Link>
+              <Link href="/danh-sach/phim-le" className="hover:text-primary">
+                Phim lẻ
+              </Link>
+              <Link href="/danh-sach/phim-bo" className="hover:text-primary">
+                Phim bộ
+              </Link>
+            </nav>
+          </SheetContent>
+        </Sheet>
       </section>
     </header>
   );
