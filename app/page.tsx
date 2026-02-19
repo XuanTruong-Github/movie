@@ -1,6 +1,15 @@
+import { Badge } from "@/components/ui/badge";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { api } from "@/configs/api";
 import { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
 async function getData() {
   try {
@@ -33,5 +42,40 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  return <section></section>;
+  const data = await getData();
+  console.log("data: ", data);
+
+  return (
+    <section className="container py-6">
+      <h3 className="mb-4 text-primary">Best Movies</h3>
+      <ul className="grid grid-cols-2 gap-6">
+        {data.items.map((item: any) => (
+          <li key={item._id}>
+            <Link
+              href={`/movie/${item.slug}`}
+              className="inline-block w-full hover:opacity-80 rounded mb-2 aspect-[0.75] overflow-hidden relative"
+              title={item.name}
+            >
+              <Image
+                src={`${data.APP_DOMAIN_CDN_IMAGE}/uploads/movies/${item.thumb_url}`}
+                alt={item.name}
+                width={320}
+                height={320}
+                sizes="100vw"
+                className="w-full object-contain"
+                loading="lazy"
+              />
+              <Badge className="absolute font-semibold top-0 right-0 z-10 rounded-none">
+                {item.episode_current}
+              </Badge>
+            </Link>
+            <p className="text-sm/normal">{item.name}</p>
+            <p className="text-xs/normal text-muted-foreground">
+              {item.origin_name}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
 }

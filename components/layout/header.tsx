@@ -35,7 +35,7 @@ export default async function Header() {
     <header className="shadow">
       <section className="flex items-center py-4 gap-x-4 container">
         <Link href="/">
-          <Image src="/logo.png" alt="Movie" width={40} height={40} />
+          <Image src="/logo.png" alt="Movie" width={40} height={40} loading="eager" />
         </Link>
         <NavigationMenu className="max-md:hidden">
           <NavigationMenuList>
@@ -73,8 +73,8 @@ export default async function Header() {
             ) : null}
           </NavigationMenuList>
         </NavigationMenu>
-        <form action="/search" className="ml-auto">
-          <InputGroup className="max-w-sm">
+        <form action="/search" className="ml-auto flex-1 max-w-sm">
+          <InputGroup className="">
             <InputGroupInput placeholder="Tìm kiếm..." name="q" />
             <InputGroupAddon>
               <Search />

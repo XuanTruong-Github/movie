@@ -39,7 +39,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          <main>{children}</main>
+          <main className="w-full">{children}</main>
+          <footer className="py-10"></footer>
         </ThemeProvider>
       </body>
     </html>
