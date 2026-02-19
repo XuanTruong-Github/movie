@@ -5,18 +5,6 @@ import { ComponentProps, useEffect, useState, ReactEventHandler } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Button } from "../ui/button";
 import ReactPlayer from "react-player";
-import {
-  MediaController,
-  MediaControlBar,
-  MediaTimeRange,
-  MediaTimeDisplay,
-  MediaVolumeRange,
-  MediaPlayButton,
-  MediaSeekBackwardButton,
-  MediaSeekForwardButton,
-  MediaMuteButton,
-  MediaFullscreenButton,
-} from "media-chrome/react";
 
 type Props = { movie: any } & ComponentProps<"div">;
 export default function MoviePlayer({ className, movie, ...props }: Props) {
@@ -32,35 +20,17 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
   return (
     <div className={cn(className)} {...props}>
       {currentMovie?.link_m3u8 ? (
-        <MediaController
-          style={{
-            width: "100%",
-            aspectRatio: "16/9",
-            marginBottom: "20px",
-          }}
-        >
-          <ReactPlayer
-            slot="media"
-            src={currentMovie.link_m3u8}
-            controls={false}
-            tabIndex={-1}
-            playsInline
-            key={currentMovie.link_m3u8}
-            width="100%"
-            height="100%"
-            style={{ aspectRatio: "16/9" }}
-          />
-          <MediaControlBar>
-            <MediaPlayButton />
-            <MediaSeekBackwardButton seekOffset={10} />
-            <MediaSeekForwardButton seekOffset={10} />
-            <MediaTimeRange />
-            <MediaTimeDisplay showDuration />
-            <MediaMuteButton />
-            <MediaVolumeRange />
-            <MediaFullscreenButton />
-          </MediaControlBar>
-        </MediaController>
+        <ReactPlayer
+          slot="media"
+          src={currentMovie.link_m3u8}
+          controls
+          tabIndex={-1}
+          playsInline
+          key={currentMovie.link_m3u8}
+          width="100%"
+          height="auto"
+          style={{ aspectRatio: "16/9", marginBottom: "24px" }}
+        />
       ) : null}
 
       <Tabs defaultValue="0">
