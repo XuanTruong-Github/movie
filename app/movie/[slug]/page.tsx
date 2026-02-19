@@ -9,7 +9,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { api } from "@/configs/api";
-import MovieProvider from "@/providers/movie-provider";
 import { Metadata } from "next";
 import { Fragment } from "react/jsx-runtime";
 
@@ -54,61 +53,53 @@ export default async function Page({ params }: Props) {
   const movie = await getMovie(slug);
 
   return (
-    <MovieProvider dataServer={movie}>
-      <div className="container py-10 grid lg:grid-cols-2 gap-6 lg:gap-10">
-        <div className="lg:col-span-2">
-          <Breadcrumb>
-            <BreadcrumbList>
-              {movie.breadCrumb.map((item: any, index: number) => {
-                if (item.isCurrent)
-                  return (
-                    <BreadcrumbItem key={index}>
-                      <BreadcrumbPage>{item.name}</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  );
-                return (
-                  <Fragment key={index}>
-                    <BreadcrumbItem>
-                      <BreadcrumbLink href={item.slug}>
-                        {item.name}
-                      </BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                  </Fragment>
-                );
-              })}
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-        <MoviePlayer movie={movie.item} />
-        <section className="">
-          <h2>{movie.item.name}</h2>
-          <p className="mb-4 text-muted-foreground">{movie.item.origin_name}</p>
-          <p>
-            {`Chất lượng: `}{" "}
-            <Badge variant={"secondary"} className="rounded mr-1">
-              {movie.item.quality}
-            </Badge>
-            <Badge variant={"secondary"} className="rounded">
-              {movie.item.lang}
-            </Badge>
-          </p>
-          {movie.item.type === "series" ? (
-            <p>{`Số tập: ${movie.item.episode_total}`}</p>
-          ) : null}
-          <p>
-            {`Thể loại: ${movie.item.category.map((item: any) => item.name).join(", ")}`}
-          </p>
-          <p>
-            {`Quốc gia: ${movie.item.country.map((item: any) => item.name).join(", ")}`}
-          </p>
-          <p>{`Năm phát hành: ${movie.item.year}`}</p>
-          <div
-            dangerouslySetInnerHTML={{ __html: movie.item.content }}
-            className="mt-4"
-          ></div>
-        </section>
-      </div>
-    </MovieProvider>
+    <section className="container py-10">
+      <Breadcrumb className="mb-6">
+        <BreadcrumbList>
+          {movie.breadCrumb.map((item: any, index: number) => {
+            if (item.isCurrent)
+              return (
+                <BreadcrumbItem key={index}>
+                  <BreadcrumbPage>{item.name}</BreadcrumbPage>
+                </BreadcrumbItem>
+              );
+            return (
+              <Fragment key={index}>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={item.slug}>{item.name}</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+              </Fragment>
+            );
+          })}
+        </BreadcrumbList>
+      </Breadcrumb>
+      <MoviePlayer movie={movie.item} className="mb-10" />
+      <h2>{movie.item.name}</h2>
+      <p className="mb-4 text-muted-foreground">{movie.item.origin_name}</p>
+      <p>
+        {`Chất lượng: `}{" "}
+        <Badge variant={"secondary"} className="rounded mr-1">
+          {movie.item.quality}
+        </Badge>
+        <Badge variant={"secondary"} className="rounded">
+          {movie.item.lang}
+        </Badge>
+      </p>
+      {movie.item.type === "series" ? (
+        <p>{`Số tập: ${movie.item.episode_total}`}</p>
+      ) : null}
+      <p>
+        {`Thể loại: ${movie.item.category.map((item: any) => item.name).join(", ")}`}
+      </p>
+      <p>
+        {`Quốc gia: ${movie.item.country.map((item: any) => item.name).join(", ")}`}
+      </p>
+      <p>{`Năm phát hành: ${movie.item.year}`}</p>
+      <div
+        dangerouslySetInnerHTML={{ __html: movie.item.content }}
+        className="mt-4"
+      ></div>
+    </section>
   );
 }

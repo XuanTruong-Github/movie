@@ -1,30 +1,66 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ComponentProps } from "react";
+import { ComponentProps, useEffect, useState, ReactEventHandler } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Button } from "../ui/button";
-import { useMovie } from "@/providers/movie-provider";
 import ReactPlayer from "react-player";
+import {
+  MediaController,
+  MediaControlBar,
+  MediaTimeRange,
+  MediaTimeDisplay,
+  MediaVolumeRange,
+  MediaPlayButton,
+  MediaSeekBackwardButton,
+  MediaSeekForwardButton,
+  MediaMuteButton,
+  MediaFullscreenButton,
+} from "media-chrome/react";
 
 type Props = { movie: any } & ComponentProps<"div">;
 export default function MoviePlayer({ className, movie, ...props }: Props) {
-  const { currentMovie, setCurrentMovie } = useMovie();
+  const [currentMovie, setCurrentMovie] = useState<any>(undefined);
+
+  useEffect(() => {
+    if (movie.episodes.length) {
+      const firstEp = movie.episodes?.[0]?.server_data?.[0];
+      if (firstEp) setCurrentMovie(firstEp);
+    }
+  }, [movie]);
 
   return (
     <div className={cn(className)} {...props}>
       {currentMovie?.link_m3u8 ? (
-        <div className="aspect-video w-full mb-4">
+        <MediaController
+          style={{
+            width: "100%",
+            aspectRatio: "16/9",
+            marginBottom: "20px",
+          }}
+        >
           <ReactPlayer
+            slot="media"
             src={currentMovie.link_m3u8}
-            controls
+            controls={false}
             tabIndex={-1}
             playsInline
             key={currentMovie.link_m3u8}
             width="100%"
             height="100%"
+            style={{ aspectRatio: "16/9" }}
           />
-        </div>
+          <MediaControlBar>
+            <MediaPlayButton />
+            <MediaSeekBackwardButton seekOffset={10} />
+            <MediaSeekForwardButton seekOffset={10} />
+            <MediaTimeRange />
+            <MediaTimeDisplay showDuration />
+            <MediaMuteButton />
+            <MediaVolumeRange />
+            <MediaFullscreenButton />
+          </MediaControlBar>
+        </MediaController>
       ) : null}
 
       <Tabs defaultValue="0">
