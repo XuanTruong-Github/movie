@@ -71,3 +71,4 @@ export default async function Home() {
     </section>
   );
 }
+export const runtime = 'edge';
