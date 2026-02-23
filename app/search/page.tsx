@@ -85,4 +85,3 @@ export default async function Page({ searchParams }: Props) {
     </section>
   );
 }
-export const runtime = 'edge';

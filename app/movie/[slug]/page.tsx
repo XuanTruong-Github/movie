@@ -113,4 +113,3 @@ export default async function Page({ params }: Props) {
     </section>
   );
 }
-export const runtime = 'edge';
