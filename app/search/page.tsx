@@ -55,7 +55,7 @@ export default async function Page({ searchParams }: Props) {
               <li key={item._id} className="group">
                 <Link
                   href={`/movie/${item.slug}`}
-                  className="inline-block w-full hover:opacity-80 mb-2 aspect-[0.75] overflow-y-hidden relative"
+                  className="inline-block w-full hover:opacity-80 mb-2 aspect-[0.75] overflow-y-hidden bg-card rounded-lg relative border"
                   title={item.name}
                 >
                   <Image
@@ -67,14 +67,14 @@ export default async function Page({ searchParams }: Props) {
                     className="w-full object-contain"
                     loading="lazy"
                   />
-                  <Badge className="absolute font-semibold top-0 right-0 z-10 rounded-none">
+                  <Badge className="absolute font-semibold top-0 left-0 z-10 rounded-none rounded-br-lg">
                     {item.episode_current}
                   </Badge>
                 </Link>
-                <p className="text-sm/normal group-hover:text-primary">
+                <p className="text-sm/normal group-hover:text-primary line-clamp-2 mb-1">
                   {item.name}
                 </p>
-                <p className="text-xs/normal text-muted-foreground">
+                <p className="text-xs/normal text-muted-foreground line-clamp-2">
                   {item.origin_name}
                 </p>
               </li>

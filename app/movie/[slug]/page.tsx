@@ -9,6 +9,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { api } from "@/configs/api";
 import { Metadata } from "next";
 import { Fragment } from "react/jsx-runtime";
@@ -57,11 +64,15 @@ export default async function Page({ params }: Props) {
     <section className="container py-10">
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Trang chủ</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
           {movie.breadCrumb.map((item: any, index: number) => {
             if (item.isCurrent)
               return (
                 <BreadcrumbItem key={index}>
-                  <BreadcrumbPage>{item.name}</BreadcrumbPage>
+                  <BreadcrumbPage className="font-bold">{item.name}</BreadcrumbPage>
                 </BreadcrumbItem>
               );
             return (
@@ -81,35 +92,66 @@ export default async function Page({ params }: Props) {
         <MoviePlayer movie={movie.item} className="mb-10" />
       )}
 
-      <h2>
-        {movie.item.status === "trailer" ? "Trailer" : ""} {movie.item.name}
-      </h2>
-      <p className="mb-4 text-muted-foreground">{movie.item.origin_name}</p>
-      <p>
-        {`Chất lượng: `}{" "}
-        <Badge variant={"secondary"} className="rounded mr-1">
-          {movie.item.quality}
-        </Badge>
-        <Badge variant={"secondary"} className="rounded">
-          {movie.item.lang}
-        </Badge>
-      </p>
-      {movie.item.type === "series" ? (
-        <p>{`Số tập: ${movie.item.episode_total}`}</p>
-      ) : null}
-      <p>
-        {`Thể loại: ${movie.item.category.map((item: any) => item.name).join(", ")}`}
-      </p>
-      <p>
-        {`Quốc gia: ${movie.item.country.map((item: any) => item.name).join(", ")}`}
-      </p>
-      <p>{`Năm phát hành: ${movie.item.year}`}</p>
-      <p>{`Diễn viên: ${movie.item.actor.filter((item: string) => !!item).join(", ")}`}</p>
-      <p>{`Đạo diễn: ${movie.item?.director?.join(", ")}`}</p>
-      <div
-        dangerouslySetInnerHTML={{ __html: movie.item.content }}
-        className="mt-4"
-      ></div>
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>
+            {movie.item.status === "trailer" ? "Trailer" : ""} {movie.item.name}
+          </CardTitle>
+          <CardDescription>{movie.item.origin_name}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div
+            dangerouslySetInnerHTML={{ __html: movie.item.content }}
+            className="text-foreground/70 text-sm"
+          ></div>
+        </CardContent>
+      </Card>
+      <h4 className="mb-4">Thông tin phim</h4>
+      <div className="grid grid-cols-2 lg:w-1/2">
+        <div className="">
+          <p>Chất lượng</p>
+          <div className="mb-2">
+            <Badge variant={"secondary"} className="rounded mr-1">
+              {movie.item.quality}
+            </Badge>
+            <Badge variant={"secondary"} className="rounded">
+              {movie.item.lang}
+            </Badge>
+          </div>
+          {movie.item.type === "series" ? (
+            <>
+              <p>Số tập</p>
+              <p className="text-sm text-foreground/70 mb-2">
+                {movie.item.episode_total}
+              </p>
+            </>
+          ) : null}
+
+          <p>Thể loại</p>
+          <p className="text-sm text-foreground/70 mb-2">
+            {movie.item.category.map((item: any) => item.name).join(", ")}
+          </p>
+          <p>Quốc gia</p>
+          <p className="text-sm text-foreground/70 mb-2">
+            {movie.item.country.map((item: any) => item.name).join(", ")}
+          </p>
+        </div>
+        <div className="">
+          <p>Năm phát hành</p>
+          <p className="text-sm text-foreground/70 mb-2">{movie.item.year}</p>
+
+          <p>Diễn viên</p>
+          <p className="text-sm text-foreground/70 mb-2">
+            {movie.item.actor.filter((item: string) => !!item).join(", ") ||
+              "Đang cập nhật"}
+          </p>
+
+          <p>Đạo diễn</p>
+          <p className="text-sm text-foreground/70 mb-6">
+            {movie.item?.director?.join(", ") || "Đang cập nhật"}
+          </p>
+        </div>
+      </div>
     </section>
   );
 }
