@@ -89,7 +89,7 @@ export default async function Page({ params }: Props) {
       {movie.item.status === "trailer" ? (
         <Trailer movie={movie.item} className="mb-10" />
       ) : (
-        <MoviePlayer movie={movie.item} className="mb-10" />
+        <MoviePlayer movie={movie} className="mb-10" />
       )}
 
       <Card className="mb-6">
