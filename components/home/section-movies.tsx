@@ -52,7 +52,7 @@ export default async function SectionMovies({
           {data?.items?.map((item: any) => (
             <CarouselItem
               key={item._id}
-              className="basis-1/2 md:basis-1/3 lg:basis-1/5 xl:basis-1/6"
+              className="basis-1/2 md:basis-1/3 lg:basis-1/5 xl:basis-1/6 group"
             >
               <Link
                 href={`/movie/${item.slug}`}
@@ -72,7 +72,7 @@ export default async function SectionMovies({
                   {item.episode_current}
                 </Badge>
               </Link>
-              <p className="text-sm/normal group-hover:text-primary line-clamp-2 mb-1">
+              <p className="text-sm/normal line-clamp-2 mb-1 group-hover:text-primary">
                 {item.name}
               </p>
               <p className="text-xs/normal text-muted-foreground line-clamp-2">

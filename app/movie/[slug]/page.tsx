@@ -97,7 +97,7 @@ export default async function Page({ params }: Props) {
           <CardTitle>
             {movie.item.status === "trailer" ? "Trailer" : ""} {movie.item.name}
           </CardTitle>
-          <CardDescription>{movie.item.origin_name}</CardDescription>
+          <CardDescription className="text-primary">{movie.item.origin_name}</CardDescription>
         </CardHeader>
         <CardContent>
           <div
