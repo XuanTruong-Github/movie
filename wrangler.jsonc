@@ -9,10 +9,4 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS",
   },
-  "routes": [
-    {
-      "pattern": "https://truonglx-movie.top/*",
-      "custom_domain": true,
-    },
-  ],
 }
