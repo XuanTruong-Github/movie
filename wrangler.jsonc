@@ -4,11 +4,15 @@
   "name": "movie",
   // Set this to today's date
   "compatibility_date": "2026-02-21",
-  "compatibility_flags": [
-    "nodejs_compat"
-  ],
+  "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": ".open-next/assets",
-    "binding": "ASSETS"
-  }
+    "binding": "ASSETS",
+  },
+  "routes": [
+    {
+      "pattern": "https://truonglx-movie.top",
+      "custom_domain": true,
+    },
+  ],
 }
