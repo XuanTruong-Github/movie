@@ -11,7 +11,7 @@
   },
   "routes": [
     {
-      "pattern": "https://truonglx-movie.top",
+      "pattern": "https://truonglx-movie.top/*",
       "custom_domain": true,
     },
   ],
