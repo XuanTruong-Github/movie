@@ -34,6 +34,24 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
       airplay: true,
       theme: "#f0b000",
       lang: "en", // or 'en'
+      controls: [
+        {
+          name: "backward",
+          position: "right",
+          html: `<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M11 18V6l-8.5 6L11 18zm1-6l8.5 6V6L12 12z"/></svg>`,
+          click: () => {
+            art.currentTime = Math.max(0, art.currentTime - 30);
+          },
+        },
+        {
+          name: "forward",
+          position: "right",
+          html: `<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M13 6v12l8.5-6L13 6zm-1 6L3.5 6v12L12 12z"/></svg>`,
+          click: () => {
+            art.currentTime = Math.min(art.duration, art.currentTime + 30);
+          },
+        },
+      ],
     });
     return () => art.destroy(false);
   }, [currentMovie]);
