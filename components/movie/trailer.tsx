@@ -14,7 +14,6 @@ export default function Trailer({ movie, ...props }: Props) {
       id: movie.trailer_url,
       container: $playerRef.current,
       url: movie.trailer_url,
-      poster: `${movie.APP_DOMAIN_CDN_IMAGE}/${movie.item.poster_url}`,
       autoPlayback: true,
       pip: true,
       fullscreen: true,

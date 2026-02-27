@@ -23,7 +23,6 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
       id: currentMovie?.slug,
       container: $playerRef.current,
       url: currentMovie?.link_m3u8,
-      poster: `${movie.APP_DOMAIN_CDN_IMAGE}/${movie.item.poster_url}`,
       autoPlayback: true,
       pip: true,
       fullscreen: true,
