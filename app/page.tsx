@@ -59,7 +59,7 @@ export default async function Home() {
             {data.items.map((item: any) => (
               <CarouselItem
                 key={item._id}
-                className="basis-1/2 md:basis-1/3 lg:basis-1/5 xl:basis-1/6"
+                className="basis-1/2 md:basis-1/4 lg:basis-1/6 xl:basis-1/8"
               >
                 <Link
                   href={`/movie/${item.slug}`}
@@ -75,14 +75,14 @@ export default async function Home() {
                     className="w-full object-contain"
                     loading="lazy"
                   />
-                  <Badge className="absolute font-semibold top-0 left-0 z-10 rounded-none rounded-br-lg">
+                  <Badge className="absolute font-semibold bottom-0 left-1/2 -translate-x-1/2 z-10 rounded-none rounded-tl rounded-tr">
                     {item.episode_current}
                   </Badge>
                 </Link>
-                <p className="text-sm/normal group-hover:text-primary line-clamp-2 mb-1">
+                <p className="text-sm/normal text-center group-hover:text-primary line-clamp-2 mb-1">
                   {item.name}
                 </p>
-                <p className="text-xs/normal text-muted-foreground line-clamp-2">
+                <p className="text-xs/normal text-center text-muted-foreground line-clamp-2">
                   {item.origin_name}
                 </p>
               </CarouselItem>

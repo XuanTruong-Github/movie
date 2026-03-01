@@ -154,7 +154,13 @@
   }
 }
 @utility container {
-  padding-inline: 16px;
+  padding-inline: 1rem;
   margin-inline: auto;
-  max-width: 1200px;
+  @variant lg {
+    padding-inline: 4rem;
+  }
+  @variant xl {
+    padding-inline: 7rem;
+    max-width: 100%;
+  }
 }

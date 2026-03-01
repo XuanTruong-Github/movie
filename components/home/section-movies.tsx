@@ -11,6 +11,8 @@ import Image from "next/image";
 import { Badge } from "../ui/badge";
 import { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { ChevronRight } from "lucide-react";
 
 async function getData(type: string) {
   try {
@@ -33,14 +35,21 @@ export default async function SectionMovies({
   return (
     <section className={cn("container", className)} {...props}>
       <h2 className="mb-4 lg:mb-6">
-        <Link
-          href={`/danh-sach/${type}`}
-          target="_blank"
-          className="hover:underline underline-offset-8 hover:text-primary"
-          title={data?.titlePage}
+        {data?.titlePage}
+        <Button
+          variant={"outline"}
+          size={"icon-sm"}
+          className="ml-4 rounded-full"
+          asChild
         >
-          {data?.titlePage}
-        </Link>
+          <Link
+            href={`/danh-sach/${type}`}
+            target="_blank"
+            title={data?.titlePage}
+          >
+            <ChevronRight />
+          </Link>
+        </Button>
       </h2>
       <Carousel
         opts={{
@@ -52,7 +61,7 @@ export default async function SectionMovies({
           {data?.items?.map((item: any) => (
             <CarouselItem
               key={item._id}
-              className="basis-1/2 md:basis-1/3 lg:basis-1/5 xl:basis-1/6 group"
+              className="basis-1/2 md:basis-1/3 lg:basis-1/6 xl:basis-1/8 group"
             >
               <Link
                 href={`/movie/${item.slug}`}
@@ -68,14 +77,14 @@ export default async function SectionMovies({
                   className="w-full object-contain"
                   loading="lazy"
                 />
-                <Badge className="absolute font-semibold top-0 left-0 z-10 rounded-none rounded-br-lg">
+                <Badge className="absolute font-semibold bottom-0 left-1/2 -translate-x-1/2 z-10 rounded-none rounded-tl rounded-tr">
                   {item.episode_current}
                 </Badge>
               </Link>
-              <p className="text-sm/normal line-clamp-2 mb-1 group-hover:text-primary">
+              <p className="text-sm/normal text-center line-clamp-2 mb-1 group-hover:text-primary">
                 {item.name}
               </p>
-              <p className="text-xs/normal text-muted-foreground line-clamp-2">
+              <p className="text-xs/normal text-center text-muted-foreground line-clamp-2">
                 {item.origin_name}
               </p>
             </CarouselItem>

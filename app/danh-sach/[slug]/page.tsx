@@ -63,7 +63,7 @@ export default async function Page({ params, searchParams }: Props) {
         <p>Không có phim nào</p>
       ) : (
         <>
-          <ul className="grid mb-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <ul className="grid mb-20 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-8 gap-6">
             {data.items.map((item: any) => (
               <li key={item._id} className="group">
                 <Link
@@ -84,10 +84,10 @@ export default async function Page({ params, searchParams }: Props) {
                     {item.episode_current}
                   </Badge>
                 </Link>
-                <p className="text-sm/normal group-hover:text-primary line-clamp-2 mb-1">
+                <p className="text-sm/normal text-center group-hover:text-primary line-clamp-2 mb-1">
                   {item.name}
                 </p>
-                <p className="text-xs/normal text-muted-foreground line-clamp-2">
+                <p className="text-xs/normal text-center text-muted-foreground line-clamp-2">
                   {item.origin_name}
                 </p>
               </li>
