@@ -1,6 +1,6 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "DropAxis",
+  "short_name": "DropAxis",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
