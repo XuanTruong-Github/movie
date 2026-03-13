@@ -23,7 +23,6 @@ async function getMovies(
     return null;
   }
 }
-
 type Props = {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ page: string; limit: string }>;
