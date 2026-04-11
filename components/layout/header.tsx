@@ -13,7 +13,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "../ui/input-group";
-import { Menu, Search } from "lucide-react";
+import { Menu, Search } from "@/components/ui/icons";
 import Image from "next/image";
 import {
   Sheet,

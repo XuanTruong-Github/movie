@@ -12,7 +12,7 @@ import { Badge } from "../ui/badge";
 import { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight } from "@/components/ui/icons";
 
 async function getData(type: string) {
   try {
