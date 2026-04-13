@@ -12,7 +12,7 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
-    "@opennextjs/cloudflare": "^1.16.5",
+    "@opennextjs/cloudflare": "^1.19.1",
     "artplayer": "^5.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -37,7 +37,7 @@
     "tailwindcss": "^4",
     "tw-animate-css": "^1.4.0",
     "typescript": "^5",
-    "wrangler": "^4.67.0"
+    "wrangler": "^4.81.1"
   },
   "packageManager": "pnpm@10.29.3+sha512.498e1fb4cca5aa06c1dcf2611e6fafc50972ffe7189998c409e90de74566444298ffe43e6cd2acdc775ba1aa7cc5e092a8b7054c811ba8c5770f84693d33d2dc"
 }
