@@ -24,18 +24,17 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
   return (
     <div className={cn(className)} {...props}>
       {currentMovie?.link_m3u8 ? (
-        <>
+        <div className="border bg-black rounded-lg overflow-hidden aspect-video mb-4">
           <ReactPlayer
             ref={playerRef}
             key={currentMovie.link_m3u8}
             src={currentMovie.link_m3u8}
             controls
             playsInline
-            height="auto"
+            height="100%"
             width="100%"
-            style={{ aspectRatio: 16 / 9, marginBottom: 16 }}
           />
-        </>
+        </div>
       ) : null}
 
       <Tabs defaultValue="0" onValueChange={onChangeEpisode}>
