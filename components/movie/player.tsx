@@ -24,16 +24,42 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
   return (
     <div className={cn(className)} {...props}>
       {currentMovie?.link_m3u8 ? (
-        <div className="border bg-black rounded-lg overflow-hidden aspect-video mb-4">
-          <ReactPlayer
-            ref={playerRef}
-            key={currentMovie.link_m3u8}
-            src={currentMovie.link_m3u8}
-            controls
-            playsInline
-            height="100%"
-            width="100%"
-          />
+        <div className="mb-4">
+          <div className="border bg-black rounded-lg overflow-hidden aspect-video mb-2">
+            <ReactPlayer
+              ref={playerRef}
+              key={currentMovie.link_m3u8}
+              src={currentMovie.link_m3u8}
+              controls
+              playsInline
+              height="100%"
+              width="100%"
+            />
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                if (playerRef.current) {
+                  playerRef.current.currentTime -= 10;
+                }
+              }}
+            >
+              -10s
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                if (playerRef.current) {
+                  playerRef.current.currentTime += 10;
+                }
+              }}
+            >
+              +10s
+            </Button>
+          </div>
         </div>
       ) : null}
 
@@ -49,7 +75,7 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
           <TabsContent
             key={index}
             value={String(index)}
-            className="flex flex-wrap gap-2 bg-card p-4 rounded-lg"
+            className="flex flex-wrap gap-2 bg-card p-4 rounded-lg border"
           >
             {item.server_data.map((ep: any, epIndex: number) => (
               <Button
@@ -57,7 +83,7 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
                 variant={currentMovie?.slug === ep.slug ? "default" : "outline"}
                 onClick={() => setCurrentMovie(ep)}
               >
-                {ep.name}
+               Tập {ep.name}
               </Button>
             ))}
           </TabsContent>
