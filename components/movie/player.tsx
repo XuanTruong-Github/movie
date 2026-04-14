@@ -8,19 +8,24 @@ import ReactPlayer from "react-player";
 
 type Props = { movie: any } & ComponentProps<"div">;
 export default function MoviePlayer({ className, movie, ...props }: Props) {
+  const playerRef = useRef<HTMLVideoElement | null>(null);
   const [currentMovie, setCurrentMovie] = useState<any>(null);
   function onChangeEpisode(value: string) {
     const firstEp = movie?.item?.episodes?.[Number(value)]?.server_data?.[0];
     if (firstEp) setCurrentMovie(firstEp);
+  }
+  function onSeek(seconds: number) {
+    if (playerRef.current) {
+      playerRef.current.currentTime += seconds;
+    }
   }
   useEffect(() => {
     if (movie?.item?.episodes?.length) {
       const firstEp = movie?.item?.episodes?.[0]?.server_data?.[0];
       if (firstEp) setCurrentMovie(firstEp);
     }
+    console.log(movie);
   }, [movie]);
-  const playerRef = useRef<any>(null);
-
   return (
     <div className={cn(className)} {...props}>
       {currentMovie?.link_m3u8 ? (
@@ -37,31 +42,19 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
             />
           </div>
           <div className="flex gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => {
-                if (playerRef.current) {
-                  playerRef.current.currentTime -= 10;
-                }
-              }}
-            >
+            <Button variant="secondary" size="sm" onClick={() => onSeek(-10)}>
               -10s
             </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => {
-                if (playerRef.current) {
-                  playerRef.current.currentTime += 10;
-                }
-              }}
-            >
+            <Button variant="secondary" size="sm" onClick={() => onSeek(10)}>
               +10s
             </Button>
           </div>
         </div>
-      ) : null}
+      ) : (
+        <div className="border bg-black rounded-lg overflow-hidden aspect-video mb-2 flex items-center justify-center">
+          Không có link phim
+        </div>
+      )}
 
       <Tabs defaultValue="0" onValueChange={onChangeEpisode}>
         <TabsList>
@@ -83,7 +76,7 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
                 variant={currentMovie?.slug === ep.slug ? "default" : "outline"}
                 onClick={() => setCurrentMovie(ep)}
               >
-               Tập {ep.name}
+                Tập {ep.name}
               </Button>
             ))}
           </TabsContent>

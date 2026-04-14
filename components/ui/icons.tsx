@@ -2,7 +2,7 @@ import * as React from "react";
 
 type SVGProps = React.SVGProps<SVGSVGElement> & { size?: number };
 
-export function Menu(props: SVGProps) {
+export function MenuIcon(props: SVGProps) {
   const { size = 20, ...rest } = props;
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" {...rest}>
