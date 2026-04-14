@@ -10,6 +10,8 @@ type Props = { movie: any } & ComponentProps<"div">;
 export default function MoviePlayer({ className, movie, ...props }: Props) {
   const playerRef = useRef<HTMLVideoElement | null>(null);
   const [currentMovie, setCurrentMovie] = useState<any>(null);
+  const [isIPhone, setIsIPhone] = useState(false);
+
   function onChangeEpisode(value: string) {
     const firstEp = movie?.item?.episodes?.[Number(value)]?.server_data?.[0];
     if (firstEp) setCurrentMovie(firstEp);
@@ -19,12 +21,19 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
       playerRef.current.currentTime += seconds;
     }
   }
+
+  useEffect(() => {
+    const userAgent = window?.navigator?.userAgent || window?.navigator?.vendor;
+    if (/iPhone/i.test(userAgent)) {
+      setIsIPhone(true);
+    }
+  }, []);
+
   useEffect(() => {
     if (movie?.item?.episodes?.length) {
       const firstEp = movie?.item?.episodes?.[0]?.server_data?.[0];
       if (firstEp) setCurrentMovie(firstEp);
     }
-    console.log(movie);
   }, [movie]);
   return (
     <div className={cn(className)} {...props}>
@@ -41,14 +50,16 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
               width="100%"
             />
           </div>
-          <div className="flex gap-2">
-            <Button variant="secondary" size="sm" onClick={() => onSeek(-10)}>
-              -10s
-            </Button>
-            <Button variant="secondary" size="sm" onClick={() => onSeek(10)}>
-              +10s
-            </Button>
-          </div>
+          {!isIPhone && (
+            <div className="flex gap-2">
+              <Button variant="secondary" size="sm" onClick={() => onSeek(-10)}>
+                -10s
+              </Button>
+              <Button variant="secondary" size="sm" onClick={() => onSeek(10)}>
+                +10s
+              </Button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="border bg-black rounded-lg overflow-hidden aspect-video mb-2 flex items-center justify-center">
