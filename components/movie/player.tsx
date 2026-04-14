@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ComponentProps, useEffect, useState } from "react";
+import { ComponentProps, useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Button } from "../ui/button";
 import ReactPlayer from "react-player";
@@ -19,18 +19,23 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
       if (firstEp) setCurrentMovie(firstEp);
     }
   }, [movie]);
+  const playerRef = useRef<any>(null);
+
   return (
     <div className={cn(className)} {...props}>
       {currentMovie?.link_m3u8 ? (
-        <ReactPlayer
-          key={currentMovie.link_m3u8}
-          src={currentMovie.link_m3u8}
-          controls
-          playsInline
-          height="auto"
-          width="100%"
-          style={{ aspectRatio: 16 / 9 }}
-        />
+        <>
+          <ReactPlayer
+            ref={playerRef}
+            key={currentMovie.link_m3u8}
+            src={currentMovie.link_m3u8}
+            controls
+            playsInline
+            height="auto"
+            width="100%"
+            style={{ aspectRatio: 16 / 9, marginBottom: 16 }}
+          />
+        </>
       ) : null}
 
       <Tabs defaultValue="0" onValueChange={onChangeEpisode}>

@@ -11,7 +11,7 @@ export function Menu(props: SVGProps) {
   );
 }
 
-export function Search(props: SVGProps) {
+export function SearchIcon(props: SVGProps) {
   const { size = 18, ...rest } = props;
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" {...rest}>

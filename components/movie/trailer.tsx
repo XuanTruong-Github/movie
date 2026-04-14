@@ -19,7 +19,7 @@ export default function Trailer({ movie, ...props }: Props) {
         playsInline
         height="auto"
         width="100%"
-        style={{ aspectRatio: 16 / 9 }}
+        style={{ aspectRatio: 16 / 9, marginBottom: 16 }}
       />
     </div>
   );

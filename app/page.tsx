@@ -59,7 +59,7 @@ export default async function Home() {
             {data.items.map((item: any) => (
               <CarouselItem
                 key={item._id}
-                className="basis-1/2 md:basis-1/4 lg:basis-1/6 xl:basis-1/8"
+                className="basis-1/2 md:basis-1/4 lg:basis-1/6 xl:basis-1/7"
               >
                 <Link
                   href={`/movie/${item.slug}`}

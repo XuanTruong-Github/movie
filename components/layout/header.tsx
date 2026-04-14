@@ -8,13 +8,8 @@ import {
   NavigationMenuTrigger,
 } from "../ui/navigation-menu";
 import Link from "next/link";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "../ui/input-group";
-import { Menu, Search } from "@/components/ui/icons";
-import Image from "next/image";
+
+import { Menu } from "@/components/ui/icons";
 import {
   Sheet,
   SheetContent,
@@ -29,6 +24,8 @@ import {
   AccordionTrigger,
   Accordion,
 } from "../ui/accordion";
+import Search from "@/app/search/search";
+import { Suspense } from "react";
 
 async function getMenu(type: string) {
   try {
@@ -47,14 +44,8 @@ export default async function Header() {
   return (
     <header className="shadow">
       <section className="flex items-center py-4 gap-x-4 container">
-        <Link href="/">
-          <Image
-            src="/logo.png"
-            alt="Movie"
-            width={40}
-            height={40}
-            loading="eager"
-          />
+        <Link href="/" className="font-black text-primary text-2xl">
+          TruongLX
         </Link>
         <NavigationMenu className="max-md:hidden">
           <NavigationMenuList>
@@ -63,8 +54,8 @@ export default async function Header() {
                 <NavigationMenuTrigger>Thể loại</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="w-80 grid grid-cols-3">
-                    {categories.map((item: any) => (
-                      <NavigationMenuLink key={item._id} asChild>
+                    {categories.map((item: any, index: number) => (
+                      <NavigationMenuLink key={index} asChild>
                         <li>
                           <Link href={`/the-loai/${item.slug}`}>
                             {item.name}
@@ -81,8 +72,8 @@ export default async function Header() {
                 <NavigationMenuTrigger>Quốc gia</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="w-96 grid grid-cols-3">
-                    {countries.map((item: any) => (
-                      <NavigationMenuLink key={item._id} asChild>
+                    {countries.map((item: any, index: number) => (
+                      <NavigationMenuLink key={index} asChild>
                         <li>
                           <Link href={`/quoc-gia/${item.slug}`}>
                             {item.name}
@@ -121,30 +112,19 @@ export default async function Header() {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <form action="/search" className="ml-auto flex-1 max-w-sm">
-          <InputGroup className="h-10">
-            <InputGroupInput placeholder="Tìm kiếm..." name="q" />
-            <InputGroupAddon>
-              <Search />
-            </InputGroupAddon>
-          </InputGroup>
-        </form>
+        <Suspense fallback={null}>
+          <Search className="ml-auto flex-1 max-w-sm" />
+        </Suspense>
         <Sheet>
           <SheetTrigger asChild>
             <Button variant={"outline"} className="md:hidden" size={"lg"}>
               <Menu />
             </Button>
           </SheetTrigger>
-          <SheetContent>
+          <SheetContent className="gap-0">
             <SheetHeader>
-              <SheetTitle>
-                <Image
-                  src="/logo.png"
-                  alt="Movie"
-                  width={48}
-                  height={48}
-                  loading="eager"
-                />
+              <SheetTitle className="font-black text-2xl text-primary">
+                TruongLX
               </SheetTitle>
             </SheetHeader>
             <nav className="flex flex-col items-start gap-5 px-4 pb-6 max-h-screen overflow-y-scroll">
@@ -156,9 +136,9 @@ export default async function Header() {
                     </AccordionTrigger>
                     <AccordionContent className="w-full mt-4 pl-2 pb-0">
                       <div className="w-full grid grid-cols-2 gap-4">
-                        {categories.map((item: any) => (
+                        {categories.map((item: any, index: number) => (
                           <Link
-                            key={item._id}
+                            key={index}
                             href={`/the-loai/${item.slug}`}
                             className="text-foreground/70 hover:text-primary"
                           >
@@ -176,9 +156,9 @@ export default async function Header() {
                     </AccordionTrigger>
                     <AccordionContent className="w-full mt-4 pl-2 pb-0">
                       <div className="w-full grid grid-cols-2 gap-4">
-                        {countries.map((item: any) => (
+                        {countries.map((item: any, index: number) => (
                           <Link
-                            key={item._id}
+                            key={index}
                             href={`/quoc-gia/${item.slug}`}
                             className="text-foreground/70 hover:text-primary"
                           >
