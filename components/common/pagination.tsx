@@ -1,3 +1,5 @@
+import { PaginationData } from "@/lib/types";
+
 import {
   Pagination,
   PaginationContent,
@@ -7,13 +9,6 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-
-type PaginationData = {
-  totalItems: number;
-  totalItemsPerPage: number;
-  currentPage: number;
-  pageRanges: number;
-};
 
 type Props = {
   data: PaginationData;
@@ -31,7 +26,7 @@ export default function CustomPagination({ data, basePath, hrefBuilder }: Props)
   const half = Math.floor(pageRanges / 2);
 
   let start = Math.max(1, current - half);
-  let end = Math.min(totalPages, start + pageRanges - 1);
+  const end = Math.min(totalPages, start + pageRanges - 1);
   if (end - start + 1 < pageRanges) start = Math.max(1, end - pageRanges + 1);
 
   const pages = Array.from({ length: end - start + 1 }, (_, i) => start + i);

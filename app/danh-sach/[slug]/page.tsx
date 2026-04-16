@@ -1,19 +1,21 @@
 import CommonPagination from "@/components/common/pagination";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/configs/api";
+import { toOpenGraphType } from "@/lib/metadata";
+import { ListSearchParams, MovieListItem, MovieListResponse } from "@/lib/types";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 async function getMovies(
   slug: string,
-  params = {
-    page: 1,
-    limit: 24,
+  params: ListSearchParams = {
+    page: "1",
+    limit: "24",
   },
-) {
+): Promise<MovieListResponse | null> {
   try {
-    const searchParams = new URLSearchParams(params as any).toString();
+    const searchParams = new URLSearchParams(params).toString();
     const response = await api(`/danh-sach/${slug}?${searchParams}`);
     if (!response.ok) throw new Error(response.statusText);
     const { data } = await response.json();
@@ -34,14 +36,20 @@ export async function generateMetadata({
   searchParams,
 }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const movie = await getMovies(slug, (await searchParams) as any);
+  const movie = await getMovies(slug, await searchParams);
+  if (!movie) {
+    return {
+      title: slug,
+      description: `Danh sach phim ${slug}`,
+    };
+  }
 
   return {
     title: movie.seoOnPage.titleHead,
     description: movie.seoOnPage.descriptionHead,
 
     openGraph: {
-      type: movie.seoOnPage.og_type,
+      type: toOpenGraphType(movie.seoOnPage.og_type),
       title: movie.seoOnPage.titleHead,
       description: movie.seoOnPage.descriptionHead,
       url: movie.seoOnPage.og_url,
@@ -54,7 +62,15 @@ export async function generateMetadata({
 
 export default async function Page({ params, searchParams }: Props) {
   const { slug } = await params;
-  const data = await getMovies(slug, (await searchParams) as any);
+  const data = await getMovies(slug, await searchParams);
+  if (!data) {
+    return (
+      <section className="container py-10">
+        <h2 className="mb-4 md:mb-6 lg:mb-10">{slug}</h2>
+        <p>Không tải được danh sách phim.</p>
+      </section>
+    );
+  }
   const { pagination } = data.params;
   return (
     <section className="container py-10">
@@ -64,7 +80,7 @@ export default async function Page({ params, searchParams }: Props) {
       ) : (
         <>
           <ul className="grid mb-20 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-6">
-            {data.items.map((item: any) => (
+            {data.items.map((item: MovieListItem) => (
               <li key={item._id} className="group">
                 <Link
                   href={`/movie/${item.slug}`}

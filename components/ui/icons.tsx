@@ -83,5 +83,3 @@ export const ChevronRightIcon = ChevronRight;
 export const MoreHorizontalIcon = MoreHorizontal;
 export const LoaderIcon = Loader2Icon;
 export const ChevronDown = ChevronDownIcon;
-
-export default {};

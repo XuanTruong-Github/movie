@@ -11,10 +11,11 @@ import Image from "next/image";
 import { Badge } from "../ui/badge";
 import { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
+import { MovieListItem, MovieListResponse } from "@/lib/types";
 import { Button } from "../ui/button";
 import { ChevronRight } from "@/components/ui/icons";
 
-async function getData(type: string) {
+async function getData(type: string): Promise<MovieListResponse | null> {
   try {
     const response = await api(`/danh-sach/${type}?limit=15`);
     if (!response.ok) throw new Error(response.statusText);
@@ -58,7 +59,7 @@ export default async function SectionMovies({
         }}
       >
         <CarouselContent className="">
-          {data?.items?.map((item: any) => (
+          {data?.items?.map((item: MovieListItem) => (
             <CarouselItem
               key={item._id}
               className="basis-1/2 md:basis-1/3 lg:basis-1/6 xl:basis-1/7 group"

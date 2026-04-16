@@ -1,16 +1,32 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ComponentProps, useEffect, useRef, useState } from "react";
+import {
+  MovieDetailResponse,
+  MovieEpisode,
+  MovieEpisodeServer,
+} from "@/lib/types";
+import { ComponentProps, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Button } from "../ui/button";
 import ReactPlayer from "react-player";
 
-type Props = { movie: any } & ComponentProps<"div">;
+type Props = { movie: MovieDetailResponse } & ComponentProps<"div">;
+
+function getFirstEpisode(movie: MovieDetailResponse): MovieEpisode | null {
+  return movie.item.episodes[0]?.server_data[0] ?? null;
+}
+
 export default function MoviePlayer({ className, movie, ...props }: Props) {
   const playerRef = useRef<HTMLVideoElement | null>(null);
-  const [currentMovie, setCurrentMovie] = useState<any>(null);
-  const [isIPhone, setIsIPhone] = useState(false);
+  const [currentMovie, setCurrentMovie] = useState<MovieEpisode | null>(() =>
+    getFirstEpisode(movie),
+  );
+  const [isIPhone] = useState(
+    () =>
+      typeof navigator !== "undefined" &&
+      /iPhone/i.test(navigator.userAgent || navigator.vendor),
+  );
 
   function onChangeEpisode(value: string) {
     const firstEp = movie?.item?.episodes?.[Number(value)]?.server_data?.[0];
@@ -18,23 +34,12 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
   }
   function onSeek(seconds: number) {
     if (playerRef.current) {
-      playerRef.current.currentTime += seconds;
+      playerRef.current.currentTime = Math.max(
+        0,
+        playerRef.current.currentTime + seconds,
+      );
     }
   }
-
-  useEffect(() => {
-    const userAgent = window?.navigator?.userAgent || window?.navigator?.vendor;
-    if (/iPhone/i.test(userAgent)) {
-      setIsIPhone(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (movie?.item?.episodes?.length) {
-      const firstEp = movie?.item?.episodes?.[0]?.server_data?.[0];
-      if (firstEp) setCurrentMovie(firstEp);
-    }
-  }, [movie]);
   return (
     <div className={cn(className)} {...props}>
       {currentMovie?.link_m3u8 ? (
@@ -69,19 +74,19 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
 
       <Tabs defaultValue="0" onValueChange={onChangeEpisode}>
         <TabsList>
-          {movie.item.episodes.map((item: any, index: number) => (
+          {movie.item.episodes.map((item: MovieEpisodeServer, index: number) => (
             <TabsTrigger key={index} value={String(index)}>
               {item.server_name}
             </TabsTrigger>
           ))}
         </TabsList>
-        {movie.item.episodes.map((item: any, index: number) => (
+        {movie.item.episodes.map((item: MovieEpisodeServer, index: number) => (
           <TabsContent
             key={index}
             value={String(index)}
             className="flex flex-wrap gap-2 bg-card p-4 rounded-lg border"
           >
-            {item.server_data.map((ep: any, epIndex: number) => (
+            {item.server_data.map((ep: MovieEpisode, epIndex: number) => (
               <Button
                 key={epIndex}
                 variant={currentMovie?.slug === ep.slug ? "default" : "outline"}

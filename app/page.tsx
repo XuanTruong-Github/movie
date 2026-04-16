@@ -8,11 +8,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { api } from "@/configs/api";
+import { toOpenGraphType } from "@/lib/metadata";
+import { MovieListItem, MovieListResponse } from "@/lib/types";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-async function getData() {
+async function getData(): Promise<MovieListResponse | null> {
   try {
     const response = await api("/home");
     if (!response.ok) throw new Error(response.statusText);
@@ -26,13 +28,19 @@ async function getData() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getData();
+  if (!data) {
+    return {
+      title: "Phim",
+      description: "Phim",
+    };
+  }
 
   return {
     title: data.seoOnPage.titleHead,
     description: data.seoOnPage.descriptionHead,
 
     openGraph: {
-      type: data.seoOnPage.og_type,
+      type: toOpenGraphType(data.seoOnPage.og_type),
       title: data.seoOnPage.titleHead,
       description: data.seoOnPage.descriptionHead,
       images: data.seoOnPage.og_image.map((img: string) => ({
@@ -44,6 +52,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const data = await getData();
+  if (!data) {
+    return (
+      <section className="container py-10">
+        <p>Không tải được dữ liệu trang chủ.</p>
+      </section>
+    );
+  }
 
   return (
     <>
@@ -56,7 +71,7 @@ export default async function Home() {
           }}
         >
           <CarouselContent className="">
-            {data.items.map((item: any) => (
+            {data.items.map((item: MovieListItem) => (
               <CarouselItem
                 key={item._id}
                 className="basis-1/2 md:basis-1/4 lg:basis-1/6 xl:basis-1/7"

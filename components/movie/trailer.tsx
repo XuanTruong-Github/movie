@@ -1,8 +1,9 @@
 "use client";
+import { MovieDetail } from "@/lib/types";
 import { ComponentProps } from "react";
 import ReactPlayer from "react-player";
 
-type Props = { movie: any } & ComponentProps<"div">;
+type Props = { movie: MovieDetail } & ComponentProps<"div">;
 
 export default function Trailer({ movie, ...props }: Props) {
   if (!movie.trailer_url)

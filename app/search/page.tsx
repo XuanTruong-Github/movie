@@ -1,10 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/configs/api";
+import { toOpenGraphType } from "@/lib/metadata";
+import { MovieListItem, MovieListResponse } from "@/lib/types";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-async function search(keyword: string) {
+async function search(keyword: string): Promise<MovieListResponse | null> {
   try {
     const response = await api(`/tim-kiem?keyword=${keyword}`);
     if (!response.ok) throw new Error(response.statusText);
@@ -24,13 +26,19 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   const { q } = await searchParams;
   const movie = await search(q);
+  if (!movie) {
+    return {
+      title: `Tìm kiếm: ${q}`,
+      description: `Kết quả tìm kiếm cho ${q}`,
+    };
+  }
 
   return {
     title: movie.seoOnPage.titleHead,
     description: movie.seoOnPage.descriptionHead,
 
     openGraph: {
-      type: movie.seoOnPage.og_type,
+      type: toOpenGraphType(movie.seoOnPage.og_type),
       title: movie.seoOnPage.titleHead,
       description: movie.seoOnPage.descriptionHead,
       url: movie.seoOnPage.og_url,
@@ -43,15 +51,23 @@ export async function generateMetadata({
 export default async function Page({ searchParams }: Props) {
   const { q } = await searchParams;
   const data = await search(q);
+  if (!data) {
+    return (
+      <section className="container py-10">
+        <h2 className="mb-4 md:mb-10">Kết quả tìm kiếm: &quot;{q}&quot;</h2>
+        <p>Không tải được dữ liệu tìm kiếm.</p>
+      </section>
+    );
+  }
   return (
     <section className="container py-10">
-      <h2 className="mb-4 md:mb-10">Kết quả tìm kiếm: "{q}"</h2>
+      <h2 className="mb-4 md:mb-10">Kết quả tìm kiếm: &quot;{q}&quot;</h2>
       {!data?.items.length ? (
         <p>Không tìm thấy kết quả</p>
       ) : (
         <>
           <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {data.items.map((item: any) => (
+            {data.items.map((item: MovieListItem) => (
               <li key={item._id} className="group">
                 <Link
                   href={`/movie/${item.slug}`}

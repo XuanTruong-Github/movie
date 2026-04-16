@@ -17,10 +17,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { api } from "@/configs/api";
+import { toOpenGraphType } from "@/lib/metadata";
+import {
+  BreadcrumbItemData,
+  MovieCategory,
+  MovieCountry,
+  MovieDetailResponse,
+} from "@/lib/types";
 import { Metadata } from "next";
 import { Fragment } from "react/jsx-runtime";
 
-async function getMovie(slug: string) {
+async function getMovie(slug: string): Promise<MovieDetailResponse | null> {
   try {
     const response = await api(`/phim/${slug}`);
     if (!response.ok) throw new Error(response.statusText);
@@ -39,13 +46,19 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const movie = await getMovie(slug);
+  if (!movie) {
+    return {
+      title: slug,
+      description: `Thong tin phim ${slug}`,
+    };
+  }
 
   return {
     title: movie.seoOnPage.titleHead,
     description: movie.seoOnPage.descriptionHead,
 
     openGraph: {
-      type: movie.seoOnPage.og_type,
+      type: toOpenGraphType(movie.seoOnPage.og_type),
       title: movie.seoOnPage.titleHead,
       description: movie.seoOnPage.descriptionHead,
       url: movie.seoOnPage.og_url,
@@ -59,6 +72,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { slug } = await params;
   const movie = await getMovie(slug);
+  if (!movie) {
+    return (
+      <section className="container py-10">
+        <p>Không tải được thông tin phim.</p>
+      </section>
+    );
+  }
 
   return (
     <section className="container py-10">
@@ -68,7 +88,7 @@ export default async function Page({ params }: Props) {
             <BreadcrumbLink href="/">Trang chủ</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
-          {movie.breadCrumb.map((item: any, index: number) => {
+          {movie.breadCrumb.map((item: BreadcrumbItemData, index: number) => {
             if (item.isCurrent)
               return (
                 <BreadcrumbItem key={index}>
@@ -129,11 +149,11 @@ export default async function Page({ params }: Props) {
 
           <p>Thể loại</p>
           <p className="text-sm text-foreground/70 mb-2">
-            {movie.item.category.map((item: any) => item.name).join(", ")}
+            {movie.item.category.map((item: MovieCategory) => item.name).join(", ")}
           </p>
           <p>Quốc gia</p>
           <p className="text-sm text-foreground/70 mb-2">
-            {movie.item.country.map((item: any) => item.name).join(", ")}
+            {movie.item.country.map((item: MovieCountry) => item.name).join(", ")}
           </p>
         </div>
         <div className="">

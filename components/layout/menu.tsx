@@ -24,9 +24,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import { MenuItem } from "@/lib/types";
+
 type Props = {
-  categories: any[];
-  countries: any[];
+  categories: MenuItem[];
+  countries: MenuItem[];
 };
 export default function Menu({ categories, countries }: Props) {
   return (
@@ -38,7 +40,7 @@ export default function Menu({ categories, countries }: Props) {
               <NavigationMenuTrigger>Thể loại</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="w-80 grid grid-cols-3">
-                  {categories.map((item: any, index: number) => (
+                  {categories.map((item: MenuItem, index: number) => (
                     <NavigationMenuLink key={index} asChild>
                       <li>
                         <Link href={`/the-loai/${item.slug}`}>{item.name}</Link>
@@ -54,7 +56,7 @@ export default function Menu({ categories, countries }: Props) {
               <NavigationMenuTrigger>Quốc gia</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="w-96 grid grid-cols-3">
-                  {countries.map((item: any, index: number) => (
+                  {countries.map((item: MenuItem, index: number) => (
                     <NavigationMenuLink key={index} asChild>
                       <li>
                         <Link href={`/quoc-gia/${item.slug}`}>{item.name}</Link>
@@ -113,7 +115,7 @@ export default function Menu({ categories, countries }: Props) {
                   </AccordionTrigger>
                   <AccordionContent className="w-full mt-4 pl-2 pb-0">
                     <div className="w-full grid grid-cols-2 gap-4">
-                      {categories.map((item: any, index: number) => (
+                      {categories.map((item: MenuItem, index: number) => (
                         <Link
                           key={index}
                           href={`/the-loai/${item.slug}`}
@@ -126,14 +128,14 @@ export default function Menu({ categories, countries }: Props) {
                   </AccordionContent>
                 </AccordionItem>
               ) : null}
-              {categories.length ? (
+              {countries.length ? (
                 <AccordionItem value="quoc-gia">
                   <AccordionTrigger className="justify-start text-base py-0">
                     Quốc gia
                   </AccordionTrigger>
                   <AccordionContent className="w-full mt-4 pl-2 pb-0">
                     <div className="w-full grid grid-cols-2 gap-4">
-                      {countries.map((item: any, index: number) => (
+                      {countries.map((item: MenuItem, index: number) => (
                         <Link
                           key={index}
                           href={`/quoc-gia/${item.slug}`}
