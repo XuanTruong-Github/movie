@@ -26,39 +26,30 @@ async function getData(type: string): Promise<MovieListResponse | null> {
     return null;
   }
 }
+
 type Props = { type: string } & ComponentProps<"section">;
-export default async function SectionMovies({
-  type,
-  className,
-  ...props
-}: Props) {
+
+export default async function SectionMovies({ type, className, ...props }: Props) {
   const data = await getData(type);
+
   return (
     <section className={cn("container", className)} {...props}>
-      <h2 className="mb-4 lg:mb-6">
+      <h2 className="mb-4 lg:mb-6 flex items-center gap-3 border-l-[3px] border-primary pl-3">
         {data?.titlePage}
         <Button
-          variant={"outline"}
-          size={"icon-sm"}
-          className="ml-4 rounded-full"
+          variant="ghost"
+          size="icon-sm"
+          className="rounded-full opacity-60 hover:opacity-100"
           asChild
         >
-          <Link
-            href={`/danh-sach/${type}`}
-            target="_blank"
-            title={data?.titlePage}
-          >
+          <Link href={`/danh-sach/${type}`} title={data?.titlePage}>
             <ChevronRight />
           </Link>
         </Button>
       </h2>
-      <Carousel
-        opts={{
-          dragFree: true,
-          slidesToScroll: 1,
-        }}
-      >
-        <CarouselContent className="">
+
+      <Carousel opts={{ dragFree: true, slidesToScroll: 1 }}>
+        <CarouselContent>
           {data?.items?.map((item: MovieListItem) => (
             <CarouselItem
               key={item._id}
@@ -66,16 +57,15 @@ export default async function SectionMovies({
             >
               <Link
                 href={`/movie/${item.slug}`}
-                className="inline-block w-full hover:opacity-80 mb-2 aspect-[0.7] overflow-y-hidden bg-card rounded-lg relative border"
+                className="inline-block w-full hover:opacity-80 mb-2 aspect-2/3 overflow-hidden bg-card rounded-lg relative border border-white/5"
                 title={item.name}
               >
                 <Image
                   src={`${data.APP_DOMAIN_CDN_IMAGE}/uploads/movies/${item.thumb_url}`}
                   alt={item.name}
-                  width={320}
-                  height={320}
-                  sizes="100vw"
-                  className="w-full object-contain"
+                  fill
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                  className="object-cover"
                   loading="lazy"
                 />
                 <Badge className="absolute font-semibold bottom-0 left-1/2 -translate-x-1/2 z-10 rounded-none rounded-tl rounded-tr">

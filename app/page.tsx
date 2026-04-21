@@ -1,3 +1,5 @@
+import HeroSlider from "@/components/home/hero-slider";
+import SectionCinema from "@/components/home/section-cinema";
 import SectionMovies from "@/components/home/section-movies";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -62,8 +64,13 @@ export default async function Home() {
 
   return (
     <>
+      <HeroSlider
+        items={data.items.slice(0, 6)}
+        cdnUrl={data.APP_DOMAIN_CDN_IMAGE}
+      />
+
       <section className="container my-6">
-        <h2 className="mb-4 lg:mb-6">Phim mới nhất</h2>
+        <h2 className="mb-4 lg:mb-6 border-l-[3px] border-primary pl-3">Phim mới nhất</h2>
         <Carousel
           opts={{
             dragFree: true,
@@ -78,16 +85,15 @@ export default async function Home() {
               >
                 <Link
                   href={`/movie/${item.slug}`}
-                  className="inline-block w-full hover:opacity-80 mb-2 aspect-[0.75] overflow-y-hidden bg-card rounded-lg relative border"
+                  className="inline-block w-full hover:opacity-80 mb-2 aspect-2/3 overflow-hidden bg-card rounded-lg relative border border-white/5"
                   title={item.name}
                 >
                   <Image
                     src={`${data.APP_DOMAIN_CDN_IMAGE}/uploads/movies/${item.thumb_url}`}
                     alt={item.name}
-                    width={320}
-                    height={320}
-                    sizes="100vw"
-                    className="w-full object-contain"
+                    fill
+                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 16vw"
+                    className="object-cover"
                     loading="lazy"
                   />
                   <Badge className="absolute font-semibold bottom-0 left-1/2 -translate-x-1/2 z-10 rounded-none rounded-tl rounded-tr">
@@ -107,7 +113,7 @@ export default async function Home() {
           <CarouselNext className="max-lg:hidden" />
         </Carousel>
       </section>
-      <SectionMovies type="phim-chieu-rap" className="mb-6 lg:mb-10" />
+      <SectionCinema className="mb-6 lg:mb-10" />
       <SectionMovies type="phim-le" className="mb-6 lg:mb-10" />
       <SectionMovies type="phim-bo" />
     </>

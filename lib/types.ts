@@ -17,7 +17,17 @@ export type MovieListItem = {
   origin_name: string;
   slug: string;
   thumb_url: string;
+  poster_url?: string;
   episode_current: string;
+  year?: number;
+  quality?: string;
+  lang?: string;
+  time?: string;
+  type?: string;
+  tmdb?: { vote_average?: number; season?: number };
+  imdb?: { vote_average?: number };
+  category?: { id: string; name: string; slug: string }[];
+  country?: { id: string; name: string; slug: string }[];
 };
 
 export type PaginationData = {

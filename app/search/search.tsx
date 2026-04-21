@@ -13,15 +13,18 @@ export default function Search(props: ComponentProps<"form">) {
   const q = searchParams.get("q");
   return (
     <form action="/search" {...props}>
-      <InputGroup className="h-10">
+      <InputGroup className="h-9 bg-white/5 border-white/10 hover:border-white/20 transition-colors">
         <InputGroupInput
-          placeholder="Tìm kiếm..."
+          placeholder="Tìm kiếm phim..."
           name="q"
           defaultValue={q || ""}
           required
+          className="text-sm placeholder:text-foreground/40"
         />
-        <InputGroupAddon>
-          <SearchIcon />
+        <InputGroupAddon align="inline-end">
+          <button type="submit" className="cursor-pointer">
+            <SearchIcon className="size-4 text-foreground/50" />
+          </button>
         </InputGroupAddon>
       </InputGroup>
     </form>
