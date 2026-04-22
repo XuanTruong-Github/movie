@@ -25,6 +25,7 @@ import {
   MovieDetailResponse,
 } from "@/lib/types";
 import { Metadata } from "next";
+import Link from "next/link";
 import { Fragment } from "react/jsx-runtime";
 
 async function getMovie(slug: string): Promise<MovieDetailResponse | null> {
@@ -33,8 +34,7 @@ async function getMovie(slug: string): Promise<MovieDetailResponse | null> {
     if (!response.ok) throw new Error(response.statusText);
     const { data } = await response.json();
     return data;
-  } catch (error) {
-    console.log("error: ", error);
+  } catch {
     return null;
   }
 }
@@ -123,55 +123,76 @@ export default async function Page({ params }: Props) {
           <div
             dangerouslySetInnerHTML={{ __html: movie.item.content }}
             className="text-foreground/70 text-sm"
-          ></div>
+          />
         </CardContent>
       </Card>
-      <h4 className="mb-4">Thông tin phim</h4>
-      <div className="grid grid-cols-2 lg:w-1/2">
-        <div className="">
-          <p>Chất lượng</p>
-          <div className="mb-2">
-            <Badge variant={"secondary"} className="rounded mr-1">
-              {movie.item.quality}
-            </Badge>
-            <Badge variant={"secondary"} className="rounded">
-              {movie.item.lang}
-            </Badge>
-          </div>
-          {movie.item.type === "series" ? (
-            <>
-              <p>Số tập</p>
-              <p className="text-sm text-foreground/70 mb-2">
-                {movie.item.episode_total}
-              </p>
-            </>
-          ) : null}
 
-          <p>Thể loại</p>
-          <p className="text-sm text-foreground/70 mb-2">
-            {movie.item.category.map((item: MovieCategory) => item.name).join(", ")}
-          </p>
-          <p>Quốc gia</p>
-          <p className="text-sm text-foreground/70 mb-2">
-            {movie.item.country.map((item: MovieCountry) => item.name).join(", ")}
-          </p>
-        </div>
-        <div className="">
-          <p>Năm phát hành</p>
-          <p className="text-sm text-foreground/70 mb-2">{movie.item.year}</p>
+      <Card>
+        <CardHeader className="pb-0">
+          <CardTitle className="text-base border-l-[3px] border-primary pl-3">
+            Thông tin phim
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <dl className="text-sm divide-y divide-border/50">
+            <div className="flex gap-4 py-2.5">
+              <dt className="w-28 shrink-0 text-muted-foreground">Chất lượng</dt>
+              <dd className="flex flex-wrap gap-1.5">
+                <Badge variant="secondary" className="rounded">{movie.item.quality}</Badge>
+                <Badge variant="secondary" className="rounded">{movie.item.lang}</Badge>
+              </dd>
+            </div>
 
-          <p>Diễn viên</p>
-          <p className="text-sm text-foreground/70 mb-2">
-            {movie.item.actor.filter((item: string) => !!item).join(", ") ||
-              "Đang cập nhật"}
-          </p>
+            <div className="flex gap-4 py-2.5">
+              <dt className="w-28 shrink-0 text-muted-foreground">Năm phát hành</dt>
+              <dd>{movie.item.year}</dd>
+            </div>
 
-          <p>Đạo diễn</p>
-          <p className="text-sm text-foreground/70 mb-6">
-            {movie.item?.director?.join(", ") || "Đang cập nhật"}
-          </p>
-        </div>
-      </div>
+            {movie.item.type === "series" && (
+              <div className="flex gap-4 py-2.5">
+                <dt className="w-28 shrink-0 text-muted-foreground">Số tập</dt>
+                <dd>{movie.item.episode_total}</dd>
+              </div>
+            )}
+
+            <div className="flex gap-4 py-2.5">
+              <dt className="w-28 shrink-0 text-muted-foreground">Thể loại</dt>
+              <dd className="flex flex-wrap gap-1.5">
+                {movie.item.category.map((cat: MovieCategory) => (
+                  <Badge key={cat.slug} variant="outline" asChild className="rounded hover:border-primary/60 hover:text-primary transition-colors">
+                    <Link href={`/the-loai/${cat.slug}`}>{cat.name}</Link>
+                  </Badge>
+                ))}
+              </dd>
+            </div>
+
+            <div className="flex gap-4 py-2.5">
+              <dt className="w-28 shrink-0 text-muted-foreground">Quốc gia</dt>
+              <dd className="flex flex-wrap gap-1.5">
+                {movie.item.country.map((c: MovieCountry) => (
+                  <Badge key={c.slug} variant="outline" asChild className="rounded hover:border-primary/60 hover:text-primary transition-colors">
+                    <Link href={`/quoc-gia/${c.slug}`}>{c.name}</Link>
+                  </Badge>
+                ))}
+              </dd>
+            </div>
+
+            <div className="flex gap-4 py-2.5">
+              <dt className="w-28 shrink-0 text-muted-foreground">Diễn viên</dt>
+              <dd className="text-foreground/80">
+                {movie.item.actor.filter((a: string) => !!a).join(", ") || "Đang cập nhật"}
+              </dd>
+            </div>
+
+            <div className="flex gap-4 py-2.5">
+              <dt className="w-28 shrink-0 text-muted-foreground">Đạo diễn</dt>
+              <dd className="text-foreground/80">
+                {movie.item.director?.join(", ") || "Đang cập nhật"}
+              </dd>
+            </div>
+          </dl>
+        </CardContent>
+      </Card>
     </section>
   );
 }
