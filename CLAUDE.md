@@ -2,72 +2,62 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
-
-Vietnamese movie streaming platform built with Next.js App Router (v16), React 19, TypeScript, and Tailwind CSS v4. Data is sourced from the ophim1.com API. The app can be deployed to either a Node.js server or Cloudflare Workers via OpenNext.
-
 ## Commands
 
 ```bash
-pnpm dev          # Start dev server
+pnpm dev          # Start Next.js dev server (http://localhost:3000)
 pnpm build        # Production build
-pnpm start        # Run production server (0.0.0.0:3000)
 pnpm lint         # ESLint check
-pnpm preview      # Build + preview Cloudflare Workers locally
-pnpm deploy       # Deploy to Cloudflare Workers
-pnpm cf-typegen   # Regenerate Cloudflare env types
+pnpm preview      # Build + preview on local Cloudflare Workers runtime
+pnpm deploy       # Build + deploy to Cloudflare Workers
+pnpm cf-typegen   # Regenerate Cloudflare env types (cloudflare-env.d.ts)
 ```
+
+No test framework is configured.
 
 ## Architecture
 
-### Data Fetching
+**Next.js 16 App Router** targeting **Cloudflare Workers** via `@opennextjs/cloudflare`. All pages are Server Components by default; `"use client"` is used only where browser APIs or React state are required (player, search form).
 
-All data fetching is server-side. The single API client lives in [configs/api.ts](configs/api.ts) and wraps `fetch` with a base URL from `BASE_URL` env var (default: `https://ophim1.com`). All endpoints follow the pattern `/v1/api/*`. There is no client-side data fetching layer or caching abstraction — pages call the API directly in their async server components.
+**Data flow:** every page defines a local async fetch function (e.g. `getData`, `getMovie`) that calls `configs/api.ts` → `fetch(BASE_URL + "/v1/api" + path)`. There is no client-side data-fetching library (no React Query, SWR, etc.). The same fetch function is called twice per page — once in `generateMetadata` and once in the page component; there is no deduplication helper.
 
-### Routing
+**Environment variable:** `BASE_URL` must be set for the API calls to work. It's the root of the upstream movie API.
 
-App Router with these route segments:
+**Directory layout:**
+- `app/` — route pages and layouts (App Router)
+- `components/ui/` — shadcn/ui primitives (new-york style, neutral base, CSS variables)
+- `components/layout/` — Header (async Server Component), HeaderShell (sticky shell), Footer, Menu
+- `components/home/` — homepage-specific sections
+- `components/movie/` — `player.tsx` (Client Component, m3u8 via react-player, localStorage resume), `trailer.tsx`
+- `components/common/` — shared non-primitive components (pagination)
+- `lib/types.ts` — all shared TypeScript types
+- `lib/utils.ts` — `cn()` (clsx + tailwind-merge)
+- `lib/metadata.ts` — `toOpenGraphType()` helper
+- `configs/api.ts` — `"use server"` fetch wrapper
+- `providers/` — `ThemeProvider` (next-themes, defaults to dark)
+
+**Routes:**
 - `/` — homepage
-- `/movie/[slug]` — movie detail + video player
-- `/danh-sach/[slug]` — category listings (e.g. `phim-bo`, `phim-le`, `phim-chieu-rap`)
-- `/the-loai/[slug]` — genre filter
-- `/quoc-gia/[slug]` — country filter
-- `/search?q=` — search results
+- `/movie/[slug]` — movie detail + player
+- `/danh-sach/[slug]` — paginated movie list (type-based)
+- `/the-loai/[slug]` — paginated list by genre
+- `/quoc-gia/[slug]` — paginated list by country
+- `/search` — search results page
 
-### State Management
+## Conventions
 
-No global state library. The only client-side state is the dark/light theme, handled by `next-themes` via [providers/theme-provider.tsx](providers/theme-provider.tsx). Everything else is server-rendered.
+- **Path alias:** `@/` maps to the project root (e.g. `@/lib/types`, `@/components/ui/badge`).
+- **Filenames:** lowercase kebab-case (`hero-slider.tsx`, `header-shell.tsx`).
+- **Exports:** default export for page/layout/feature components; named exports for UI primitives.
+- **Props:** feature components extend `ComponentProps<"div">` (or the relevant HTML element) and forward `...props` and `className` via `cn()`.
+- **Icons:** hand-rolled inline SVGs in `components/ui/icons.tsx`. Do **not** install lucide-react — `components.json` lists it as `iconLibrary` for shadcn CLI scaffolding only, but the actual icon source is the local file.
+- **Shadcn components:** add via `pnpm dlx shadcn@latest add <component>`, which places them in `components/ui/`.
+- **Types:** add shared API response types to `lib/types.ts`.
 
-### Component Conventions
+## Anti-patterns to avoid
 
-- `components/ui/` — shadcn/ui primitives (generated via `pnpm dlx shadcn add <component>`)
-- `components/layout/` — header, menu, navigation
-- `components/movie/` — player, trailer
-- `components/home/` — homepage sections
-- `components/common/` — shared components like pagination
-- Mark components `"use client"` only when browser APIs or interactivity are needed
-
-### Type Definitions
-
-All API response types are in [lib/types.ts](lib/types.ts). Key types: `MovieDetail`, `MovieListItem`, `MovieListResponse`, `MovieEpisode`, `MovieEpisodeServer`, `SeoOnPage`, `PaginationData`.
-
-### Path Aliases
-
-Use `@/` to import from the project root (e.g. `@/components/ui/button`, `@/lib/types`).
-
-### Image CDN
-
-Remote images come from `img.ophim.live`. The `next.config.ts` allowlists this domain for `next/image` optimization.
-
-## Deployment
-
-Two deployment targets are supported:
-
-- **Node.js**: `pnpm build && pnpm start`
-- **Cloudflare Workers**: `pnpm deploy` (uses OpenNext adapter configured in [open-next.config.ts](open-next.config.ts) and [wrangler.jsonc](wrangler.jsonc))
-
-## Environment Variables
-
-| Variable   | Default                    | Purpose             |
-|------------|----------------------------|---------------------|
-| `BASE_URL` | `https://ophim1.com`       | API backend base URL |
+- Do not add `"use client"` to components that don't need browser APIs or hooks — keep the default Server Component boundary.
+- Do not use `<img>` — always use `next/image` with appropriate `sizes` prop.
+- Do not install a client-side state management library; server-fetched data is passed as props.
+- Do not install lucide-react or any other icon library; add new icons to `components/ui/icons.tsx`.
+- The `dangerouslySetInnerHTML` on the movie detail page is intentional — the upstream API returns HTML for movie descriptions.

@@ -1,0 +1,17 @@
+{
+  "allowedTools": ["bash", "edit", "git", "ls", "grep", "read", "web_search"],
+  "permissions": {
+    "default": "ask",
+    "autoAcceptPatterns": ["*.test.*", "*.spec.*", "*.md", "docs/**"],
+    "blockPatterns": [
+      ".env*",
+      "package.json",
+      "package-lock.json",
+      "yarn.lock",
+      "pnpm-lock.yaml",
+      "next.config.*",
+      "tsconfig.*",
+      "public/**"
+    ]
+  }
+}
