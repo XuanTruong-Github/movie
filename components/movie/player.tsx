@@ -1,5 +1,7 @@
 "use client";
 
+import { createPlayer, videoFeatures } from "@videojs/react";
+import { Video, VideoSkin } from "@videojs/react/video";
 import { cn } from "@/lib/utils";
 import {
   MovieDetailResponse,
@@ -9,7 +11,8 @@ import {
 import { ComponentProps, useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Button } from "../ui/button";
-import ReactPlayer from "react-player";
+
+const VJSPlayer = createPlayer({ features: videoFeatures });
 
 type Props = { movie: MovieDetailResponse } & ComponentProps<"div">;
 type PlaybackProgress = {
@@ -31,10 +34,8 @@ function readPlaybackProgress(): PlaybackProgress | null {
   try {
     const raw = window.localStorage.getItem(getPlaybackStorageKey());
     if (!raw) return null;
-
     const parsed = JSON.parse(raw) as PlaybackProgress;
     if (!parsed.episodeSlug || typeof parsed.time !== "number") return null;
-
     return parsed;
   } catch {
     return null;
@@ -52,10 +53,84 @@ function writePlaybackProgress(progress: PlaybackProgress) {
   }
 }
 
+// Inner component: restore position + throttled save — must be inside VJSPlayer.Provider
+function PlaybackManager({ currentMovie }: { currentMovie: MovieEpisode }) {
+  const store = VJSPlayer.usePlayer();
+  const { currentTime, paused, ended, duration } = VJSPlayer.usePlayer(
+    (s) => ({
+      currentTime: s.currentTime,
+      paused: s.paused,
+      ended: s.ended,
+      duration: s.duration,
+    }),
+  );
+  const lastSavedRef = useRef(0);
+  const restoredRef = useRef(false);
+
+  // Restore position when duration becomes available (metadata loaded)
+  useEffect(() => {
+    if (!duration || restoredRef.current) return;
+    const saved = readPlaybackProgress();
+    if (saved?.episodeSlug !== currentMovie.slug || saved.time <= 0) {
+      restoredRef.current = true;
+      return;
+    }
+    const safeTime = Math.min(saved.time, Math.max(0, duration - 2));
+    store.seek(Math.max(0, safeTime));
+    restoredRef.current = true;
+    lastSavedRef.current = safeTime;
+  }, [duration, currentMovie.slug, store]);
+
+  // Throttled save every SAVE_INTERVAL_SECONDS (timeupdate)
+  useEffect(() => {
+    if (isNaN(currentTime)) return;
+    if (Math.abs(currentTime - lastSavedRef.current) < SAVE_INTERVAL_SECONDS) return;
+    lastSavedRef.current = currentTime;
+    writePlaybackProgress({ episodeSlug: currentMovie.slug, time: currentTime });
+  }, [currentTime, currentMovie.slug]);
+
+  // Save on pause
+  useEffect(() => {
+    if (!paused) return;
+    writePlaybackProgress({ episodeSlug: currentMovie.slug, time: currentTime });
+  }, [paused, currentTime, currentMovie.slug]);
+
+  // Reset progress on ended
+  useEffect(() => {
+    if (!ended) return;
+    lastSavedRef.current = 0;
+    writePlaybackProgress({ episodeSlug: currentMovie.slug, time: 0 });
+  }, [ended, currentMovie.slug]);
+
+  return null;
+}
+
+// Inner component: seek buttons — must be inside VJSPlayer.Provider
+function SeekButtons() {
+  const store = VJSPlayer.usePlayer();
+  const currentTime = VJSPlayer.usePlayer((s) => s.currentTime);
+
+  return (
+    <div className="flex gap-2">
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => store.seek(Math.max(0, currentTime - 10))}
+      >
+        -10s
+      </Button>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => store.seek(currentTime + 10)}
+      >
+        +10s
+      </Button>
+    </div>
+  );
+}
+
 export default function MoviePlayer({ className, movie, ...props }: Props) {
-  const playerRef = useRef<HTMLVideoElement | null>(null);
-  const lastSavedTimeRef = useRef(0);
-  const restoredEpisodeRef = useRef<string | null>(null);
   const [currentMovie, setCurrentMovie] = useState<MovieEpisode | null>(() =>
     getFirstEpisode(movie),
   );
@@ -65,6 +140,7 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
       /iPhone/i.test(navigator.userAgent || navigator.vendor),
   );
 
+  // Restore last-watched episode from localStorage on mount
   useEffect(() => {
     const savedProgress = readPlaybackProgress();
     if (!savedProgress) return;
@@ -91,62 +167,9 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
     }
   }
 
-  function onSeek(seconds: number) {
-    if (playerRef.current) {
-      playerRef.current.currentTime = Math.max(
-        0,
-        playerRef.current.currentTime + seconds,
-      );
-    }
-  }
-
   function onSelectEpisode(episode: MovieEpisode) {
     writePlaybackProgress({ episodeSlug: episode.slug, time: 0 });
     setCurrentMovie(episode);
-  }
-
-  function persistPlaybackTime(time: number) {
-    if (!currentMovie || Number.isNaN(time)) return;
-
-    if (Math.abs(time - lastSavedTimeRef.current) < SAVE_INTERVAL_SECONDS) return;
-
-    lastSavedTimeRef.current = time;
-    writePlaybackProgress({ episodeSlug: currentMovie.slug, time });
-  }
-
-  function onLoadedMetadata() {
-    if (!playerRef.current || !currentMovie) return;
-    if (restoredEpisodeRef.current === currentMovie.slug) return;
-
-    const savedProgress = readPlaybackProgress();
-    if (savedProgress?.episodeSlug !== currentMovie.slug || savedProgress.time <= 0) {
-      restoredEpisodeRef.current = currentMovie.slug;
-      return;
-    }
-
-    const duration = Number.isFinite(playerRef.current.duration)
-      ? playerRef.current.duration
-      : 0;
-    const safeTime =
-      duration > 0
-        ? Math.min(savedProgress.time, Math.max(0, duration - 2))
-        : savedProgress.time;
-
-    playerRef.current.currentTime = Math.max(0, safeTime);
-    restoredEpisodeRef.current = currentMovie.slug;
-    lastSavedTimeRef.current = safeTime;
-  }
-
-  function onPause() {
-    if (!playerRef.current) return;
-    persistPlaybackTime(playerRef.current.currentTime);
-  }
-
-  function onEnded() {
-    if (!currentMovie) return;
-
-    lastSavedTimeRef.current = 0;
-    writePlaybackProgress({ episodeSlug: currentMovie.slug, time: 0 });
   }
 
   return (
@@ -154,32 +177,15 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
       {currentMovie?.link_m3u8 ? (
         <div className="mb-4">
           <div className="border bg-black rounded-lg overflow-hidden aspect-video mb-2">
-            <ReactPlayer
-              ref={playerRef}
-              key={currentMovie.link_m3u8}
-              src={currentMovie.link_m3u8}
-              controls
-              playsInline
-              height="100%"
-              width="100%"
-              onLoadedMetadata={onLoadedMetadata}
-              onPause={onPause}
-              onEnded={onEnded}
-              onTimeUpdate={(event) =>
-                persistPlaybackTime(event.currentTarget.currentTime)
-              }
-            />
+            {/* key forces Provider remount on episode change, cleanly resetting player state */}
+            <VJSPlayer.Provider key={currentMovie.link_m3u8}>
+              <VideoSkin className="h-full w-full">
+                <Video src={currentMovie.link_m3u8} playsInline />
+              </VideoSkin>
+              <PlaybackManager currentMovie={currentMovie} />
+              {!isIPhone && <SeekButtons />}
+            </VJSPlayer.Provider>
           </div>
-          {!isIPhone && (
-            <div className="flex gap-2">
-              <Button variant="secondary" size="sm" onClick={() => onSeek(-10)}>
-                -10s
-              </Button>
-              <Button variant="secondary" size="sm" onClick={() => onSeek(10)}>
-                +10s
-              </Button>
-            </div>
-          )}
         </div>
       ) : (
         <div className="border bg-black rounded-lg overflow-hidden aspect-video mb-2 flex items-center justify-center">
