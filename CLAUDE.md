@@ -2,62 +2,49 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Commands
+## Build & Dev Commands
 
 ```bash
-pnpm dev          # Start Next.js dev server (http://localhost:3000)
-pnpm build        # Production build
-pnpm lint         # ESLint check
-pnpm preview      # Build + preview on local Cloudflare Workers runtime
-pnpm deploy       # Build + deploy to Cloudflare Workers
-pnpm cf-typegen   # Regenerate Cloudflare env types (cloudflare-env.d.ts)
+pnpm dev       # Next.js dev server at localhost:3000
+pnpm build     # Production Next.js build
+pnpm start     # Start production server (binds 0.0.0.0)
+pnpm lint      # Run ESLint (next/core-web-vitals + typescript rules)
+pnpm preview   # opennextjs-cloudflare build then local Cloudflare preview
+pnpm deploy    # opennextjs-cloudflare build then deploy to Cloudflare Workers
+pnpm upload    # opennextjs-cloudflare build then upload assets only
+pnpm cf-typegen  # Generate Cloudflare env types → cloudflare-env.d.ts
 ```
-
-No test framework is configured.
 
 ## Architecture
 
-**Next.js 16 App Router** targeting **Cloudflare Workers** via `@opennextjs/cloudflare`. All pages are Server Components by default; `"use client"` is used only where browser APIs or React state are required (player, search form).
+- Next.js 16 App Router deployed to **Cloudflare Workers** via `@opennextjs/cloudflare`; pages are Server Components by default, `"use client"` only in `player.tsx` and `search.tsx`
+- All data comes from one external API: `fetch(BASE_URL + "/v1/api" + path)` via `configs/api.ts` (`"use server"`); no client-side fetching library
+- Each page defines its own local `getData()`/`getMovie()` function, called separately in both `generateMetadata` and the page component (no shared cache/deduplication)
+- UI is shadcn/ui (new-york style, neutral base, CSS variables) composed in `components/ui/`; custom feature components live in `components/layout/`, `components/home/`, `components/movie/`
+- `components/movie/player.tsx` saves and restores per-movie playback position using `localStorage`, keyed by `window.location.pathname`
 
-**Data flow:** every page defines a local async fetch function (e.g. `getData`, `getMovie`) that calls `configs/api.ts` → `fetch(BASE_URL + "/v1/api" + path)`. There is no client-side data-fetching library (no React Query, SWR, etc.). The same fetch function is called twice per page — once in `generateMetadata` and once in the page component; there is no deduplication helper.
+## Code Conventions
 
-**Environment variable:** `BASE_URL` must be set for the API calls to work. It's the root of the upstream movie API.
+- `@/*` path alias maps to the project root (`tsconfig.json` `paths`)
+- Filenames: lowercase kebab-case (`hero-slider.tsx`, `header-shell.tsx`)
+- Default export for page/layout/feature components; named exports for UI primitives
+- Feature component props extend `ComponentProps<"div">` and spread `...props` + merge `className` via `cn()` from `lib/utils.ts`
+- Icons are hand-rolled SVGs in `components/ui/icons.tsx` — do not install lucide-react; add new icons there
+- Shared API response types go in `lib/types.ts`; no co-located type files
 
-**Directory layout:**
-- `app/` — route pages and layouts (App Router)
-- `components/ui/` — shadcn/ui primitives (new-york style, neutral base, CSS variables)
-- `components/layout/` — Header (async Server Component), HeaderShell (sticky shell), Footer, Menu
-- `components/home/` — homepage-specific sections
-- `components/movie/` — `player.tsx` (Client Component, m3u8 via react-player, localStorage resume), `trailer.tsx`
-- `components/common/` — shared non-primitive components (pagination)
-- `lib/types.ts` — all shared TypeScript types
-- `lib/utils.ts` — `cn()` (clsx + tailwind-merge)
-- `lib/metadata.ts` — `toOpenGraphType()` helper
-- `configs/api.ts` — `"use server"` fetch wrapper
-- `providers/` — `ThemeProvider` (next-themes, defaults to dark)
+## Testing
 
-**Routes:**
-- `/` — homepage
-- `/movie/[slug]` — movie detail + player
-- `/danh-sach/[slug]` — paginated movie list (type-based)
-- `/the-loai/[slug]` — paginated list by genre
-- `/quoc-gia/[slug]` — paginated list by country
-- `/search` — search results page
+No test framework is configured. No test files exist in the repository.
 
-## Conventions
+## Key Files
 
-- **Path alias:** `@/` maps to the project root (e.g. `@/lib/types`, `@/components/ui/badge`).
-- **Filenames:** lowercase kebab-case (`hero-slider.tsx`, `header-shell.tsx`).
-- **Exports:** default export for page/layout/feature components; named exports for UI primitives.
-- **Props:** feature components extend `ComponentProps<"div">` (or the relevant HTML element) and forward `...props` and `className` via `cn()`.
-- **Icons:** hand-rolled inline SVGs in `components/ui/icons.tsx`. Do **not** install lucide-react — `components.json` lists it as `iconLibrary` for shadcn CLI scaffolding only, but the actual icon source is the local file.
-- **Shadcn components:** add via `pnpm dlx shadcn@latest add <component>`, which places them in `components/ui/`.
-- **Types:** add shared API response types to `lib/types.ts`.
-
-## Anti-patterns to avoid
-
-- Do not add `"use client"` to components that don't need browser APIs or hooks — keep the default Server Component boundary.
-- Do not use `<img>` — always use `next/image` with appropriate `sizes` prop.
-- Do not install a client-side state management library; server-fetched data is passed as props.
-- Do not install lucide-react or any other icon library; add new icons to `components/ui/icons.tsx`.
-- The `dangerouslySetInnerHTML` on the movie detail page is intentional — the upstream API returns HTML for movie descriptions.
+- `configs/api.ts` — `"use server"` fetch wrapper; prepends `BASE_URL + "/v1/api"` to every request
+- `lib/types.ts` — all shared TypeScript types (`MovieDetail`, `MovieListResponse`, etc.)
+- `app/layout.tsx` — root layout: Geist fonts, `ThemeProvider` (dark default), `Header`, `Footer`
+- `app/movie/[slug]/page.tsx` — movie detail page: breadcrumb, player or trailer, metadata card with `dangerouslySetInnerHTML` for API-supplied HTML
+- `components/movie/player.tsx` — Client Component; m3u8 playback via `react-player`, localStorage resume, skip ±10s buttons
+- `app/danh-sach/[slug]/page.tsx` — paginated movie list; pattern reused by `the-loai/` and `quoc-gia/` routes
+- `components/ui/icons.tsx` — inline SVG icon components (source of truth; not lucide-react)
+- `next.config.ts` — only config: `remotePatterns` allowing `img.ophim.live` for `next/image`
+- `wrangler.jsonc` — Cloudflare Workers config; binds `ASSETS`, `IMAGES`, and `WORKER_SELF_REFERENCE`
+- `open-next.config.ts` — Cloudflare adapter config (R2 incremental cache commented out)
