@@ -18,7 +18,7 @@ import Link from "next/link";
 
 async function getData(): Promise<MovieListResponse | null> {
   try {
-    const response = await api("/home");
+    const response = await api("/home", { next: { revalidate: 120 } });
     if (!response.ok) throw new Error(response.statusText);
     const { data } = await response.json();
     return data;
@@ -70,7 +70,9 @@ export default async function Home() {
       />
 
       <section className="container my-6">
-        <h2 className="mb-4 lg:mb-6 border-l-[3px] border-primary pl-3">Phim mới nhất</h2>
+        <h2 className="mb-4 lg:mb-6 border-l-[3px] border-primary pl-3">
+          Phim mới nhất
+        </h2>
         <Carousel
           opts={{
             dragFree: true,

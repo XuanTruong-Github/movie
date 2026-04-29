@@ -17,7 +17,9 @@ import { ChevronRight } from "@/components/ui/icons";
 
 async function getData(type: string): Promise<MovieListResponse | null> {
   try {
-    const response = await api(`/danh-sach/${type}?limit=15`);
+    const response = await api(`/danh-sach/${type}?limit=15`, {
+      next: { revalidate: 120 },
+    });
     if (!response.ok) throw new Error(response.statusText);
     const { data } = await response.json();
     return data;

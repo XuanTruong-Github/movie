@@ -16,7 +16,9 @@ async function getMovies(
 ): Promise<MovieListResponse | null> {
   try {
     const searchParams = new URLSearchParams(params).toString();
-    const response = await api(`/danh-sach/${slug}?${searchParams}`);
+    const response = await api(`/danh-sach/${slug}?${searchParams}`,{
+      next: { revalidate: 3600 }
+    });
     if (!response.ok) throw new Error(response.statusText);
     const { data } = await response.json();
     return data;

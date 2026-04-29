@@ -64,6 +64,7 @@ export default function HeroSlider({ items, cdnUrl }: Props) {
                 fill
                 className="object-cover object-top"
                 priority={index === 0}
+                loading="lazy"
               />
 
               {/* Gradient overlays */}
@@ -179,6 +180,7 @@ export default function HeroSlider({ items, cdnUrl }: Props) {
               fill
               className="object-cover"
               sizes="44px"
+              loading="lazy"
             />
           </button>
         ))}

@@ -17,7 +17,9 @@ import { ChevronRight } from "@/components/ui/icons";
 
 async function getData(): Promise<MovieListResponse | null> {
   try {
-    const response = await api("/danh-sach/phim-chieu-rap?limit=15");
+    const response = await api("/danh-sach/phim-chieu-rap?limit=15", {
+      next: { revalidate: 120 },
+    });
     if (!response.ok) throw new Error(response.statusText);
     const { data } = await response.json();
     return data;
@@ -27,7 +29,10 @@ async function getData(): Promise<MovieListResponse | null> {
   }
 }
 
-export default async function SectionCinema({ className, ...props }: ComponentProps<"section">) {
+export default async function SectionCinema({
+  className,
+  ...props
+}: ComponentProps<"section">) {
   const data = await getData();
 
   return (
@@ -50,7 +55,9 @@ export default async function SectionCinema({ className, ...props }: ComponentPr
         <CarouselContent>
           {data?.items?.map((item: MovieListItem) => {
             const imgSrc = `${data.APP_DOMAIN_CDN_IMAGE}/uploads/movies/${item.thumb_url}`;
-            const meta = [item.lang, item.year, item.time].filter(Boolean).join(" • ");
+            const meta = [item.lang, item.year, item.time]
+              .filter(Boolean)
+              .join(" • ");
             return (
               <CarouselItem
                 key={item._id}
@@ -97,7 +104,9 @@ export default async function SectionCinema({ className, ...props }: ComponentPr
                       {item.origin_name}
                     </p>
                     {meta && (
-                      <p className="hidden sm:block text-xs/normal text-muted-foreground">{meta}</p>
+                      <p className="hidden sm:block text-xs/normal text-muted-foreground">
+                        {meta}
+                      </p>
                     )}
                   </div>
                 </Link>

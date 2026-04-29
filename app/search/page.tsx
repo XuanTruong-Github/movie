@@ -8,7 +8,9 @@ import Link from "next/link";
 
 async function search(keyword: string): Promise<MovieListResponse | null> {
   try {
-    const response = await api(`/tim-kiem?keyword=${keyword}`);
+    const response = await api(`/tim-kiem?keyword=${keyword}`, {
+      next: { revalidate: 30 },
+    });
     if (!response.ok) throw new Error(response.statusText);
     const { data } = await response.json();
     return data;

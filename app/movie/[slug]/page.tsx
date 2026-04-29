@@ -30,7 +30,9 @@ import { Fragment } from "react/jsx-runtime";
 
 async function getMovie(slug: string): Promise<MovieDetailResponse | null> {
   try {
-    const response = await api(`/phim/${slug}`);
+    const response = await api(`/phim/${slug}`, {
+      next: { revalidate: 600 },
+    });
     if (!response.ok) throw new Error(response.statusText);
     const { data } = await response.json();
     return data;
@@ -92,7 +94,9 @@ export default async function Page({ params }: Props) {
             if (item.isCurrent)
               return (
                 <BreadcrumbItem key={index}>
-                  <BreadcrumbPage className="font-bold">{item.name}</BreadcrumbPage>
+                  <BreadcrumbPage className="font-bold">
+                    {item.name}
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               );
             return (
@@ -117,7 +121,9 @@ export default async function Page({ params }: Props) {
           <CardTitle>
             {movie.item.status === "trailer" ? "Trailer" : ""} {movie.item.name}
           </CardTitle>
-          <CardDescription className="text-primary">{movie.item.origin_name}</CardDescription>
+          <CardDescription className="text-primary">
+            {movie.item.origin_name}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div
@@ -136,15 +142,23 @@ export default async function Page({ params }: Props) {
         <CardContent className="pt-4">
           <dl className="text-sm divide-y divide-border/50">
             <div className="flex gap-4 py-2.5">
-              <dt className="w-28 shrink-0 text-muted-foreground">Chất lượng</dt>
+              <dt className="w-28 shrink-0 text-muted-foreground">
+                Chất lượng
+              </dt>
               <dd className="flex flex-wrap gap-1.5">
-                <Badge variant="secondary" className="rounded">{movie.item.quality}</Badge>
-                <Badge variant="secondary" className="rounded">{movie.item.lang}</Badge>
+                <Badge variant="secondary" className="rounded">
+                  {movie.item.quality}
+                </Badge>
+                <Badge variant="secondary" className="rounded">
+                  {movie.item.lang}
+                </Badge>
               </dd>
             </div>
 
             <div className="flex gap-4 py-2.5">
-              <dt className="w-28 shrink-0 text-muted-foreground">Năm phát hành</dt>
+              <dt className="w-28 shrink-0 text-muted-foreground">
+                Năm phát hành
+              </dt>
               <dd>{movie.item.year}</dd>
             </div>
 
@@ -159,7 +173,12 @@ export default async function Page({ params }: Props) {
               <dt className="w-28 shrink-0 text-muted-foreground">Thể loại</dt>
               <dd className="flex flex-wrap gap-1.5">
                 {movie.item.category.map((cat: MovieCategory) => (
-                  <Badge key={cat.slug} variant="outline" asChild className="rounded hover:border-primary/60 hover:text-primary transition-colors">
+                  <Badge
+                    key={cat.slug}
+                    variant="outline"
+                    asChild
+                    className="rounded hover:border-primary/60 hover:text-primary transition-colors"
+                  >
                     <Link href={`/the-loai/${cat.slug}`}>{cat.name}</Link>
                   </Badge>
                 ))}
@@ -170,7 +189,12 @@ export default async function Page({ params }: Props) {
               <dt className="w-28 shrink-0 text-muted-foreground">Quốc gia</dt>
               <dd className="flex flex-wrap gap-1.5">
                 {movie.item.country.map((c: MovieCountry) => (
-                  <Badge key={c.slug} variant="outline" asChild className="rounded hover:border-primary/60 hover:text-primary transition-colors">
+                  <Badge
+                    key={c.slug}
+                    variant="outline"
+                    asChild
+                    className="rounded hover:border-primary/60 hover:text-primary transition-colors"
+                  >
                     <Link href={`/quoc-gia/${c.slug}`}>{c.name}</Link>
                   </Badge>
                 ))}
@@ -180,7 +204,8 @@ export default async function Page({ params }: Props) {
             <div className="flex gap-4 py-2.5">
               <dt className="w-28 shrink-0 text-muted-foreground">Diễn viên</dt>
               <dd className="text-foreground/80">
-                {movie.item.actor.filter((a: string) => !!a).join(", ") || "Đang cập nhật"}
+                {movie.item.actor.filter((a: string) => !!a).join(", ") ||
+                  "Đang cập nhật"}
               </dd>
             </div>
 

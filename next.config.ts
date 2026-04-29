@@ -10,9 +10,11 @@ const nextConfig: NextConfig = {
         pathname: "/uploads/**",
       },
     ],
+    formats: ["image/webp", "image/avif"], // Dùng định dạng nhẹ hơn JPG/PNG
+    deviceSizes: [640, 750, 828, 1080, 1200],
   },
 };
 
 export default nextConfig;
 
-import('@opennextjs/cloudflare').then(m => m.initOpenNextCloudflareForDev());
+import("@opennextjs/cloudflare").then((m) => m.initOpenNextCloudflareForDev());
