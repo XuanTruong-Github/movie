@@ -1,4 +1,3 @@
-import HeroSlider from "@/components/home/hero-slider";
 import SectionCinema from "@/components/home/section-cinema";
 import SectionMovies from "@/components/home/section-movies";
 import { Badge } from "@/components/ui/badge";
@@ -64,11 +63,6 @@ export default async function Home() {
 
   return (
     <>
-      <HeroSlider
-        items={data.items.slice(0, 6)}
-        cdnUrl={data.APP_DOMAIN_CDN_IMAGE}
-      />
-
       <section className="container my-6">
         <h2 className="mb-4 lg:mb-6 border-l-[3px] border-primary pl-3">
           Phim mới nhất
