@@ -23,9 +23,7 @@ async function search(keyword: string): Promise<MovieListResponse | null> {
 type Props = {
   searchParams: Promise<{ q: string }>;
 };
-export async function generateMetadata({
-  searchParams,
-}: Props): Promise<Metadata> {
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const { q } = await searchParams;
   const movie = await search(q);
   if (!movie) {
@@ -68,12 +66,12 @@ export default async function Page({ searchParams }: Props) {
         <p>Không tìm thấy kết quả</p>
       ) : (
         <>
-          <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <ul className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {data.items.map((item: MovieListItem) => (
               <li key={item._id} className="group">
                 <Link
                   href={`/movie/${item.slug}`}
-                  className="inline-block w-full hover:opacity-80 mb-2 aspect-[0.75] overflow-y-hidden bg-card rounded-lg relative border"
+                  className="bg-card relative mb-2 inline-block aspect-[0.75] w-full overflow-y-hidden rounded-lg border hover:opacity-80"
                   title={item.name}
                 >
                   <Image
@@ -85,14 +83,14 @@ export default async function Page({ searchParams }: Props) {
                     className="w-full object-contain"
                     loading="lazy"
                   />
-                  <Badge className="absolute font-semibold top-0 left-0 z-10 rounded-none rounded-br-lg">
+                  <Badge className="absolute top-0 left-0 z-10 rounded-none rounded-br-lg font-semibold">
                     {item.episode_current}
                   </Badge>
                 </Link>
-                <p className="text-sm/normal group-hover:text-primary line-clamp-2 mb-1">
+                <p className="group-hover:text-primary mb-1 line-clamp-2 text-sm/normal">
                   {item.name}
                 </p>
-                <p className="text-xs/normal text-muted-foreground line-clamp-2">
+                <p className="text-muted-foreground line-clamp-2 text-xs/normal">
                   {item.origin_name}
                 </p>
               </li>

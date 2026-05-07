@@ -12,6 +12,7 @@ type: project
 ## Guidance
 
 When adding new features or fixing bugs:
+
 - Code should be manually tested in the browser/dev environment first
 - Verify both golden path and edge cases work as expected
 - Monitor for regressions in related features

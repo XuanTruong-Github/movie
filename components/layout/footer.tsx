@@ -10,44 +10,36 @@ const NAV_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/5 mt-10">
+    <footer className="relative mt-10 overflow-hidden border-t border-white/5">
       {/* Watermark */}
       <div
         aria-hidden
-        className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-[20rem] font-black text-white/[0.03] select-none leading-none pr-8"
+        className="pointer-events-none absolute top-1/2 right-0 -translate-y-1/2 pr-8 text-[20rem] leading-none font-black text-white/[0.03] select-none"
       >
         T
       </div>
 
-      <div className="container py-10 relative z-10">
+      <div className="relative z-10 container py-10">
         {/* Logo + tagline */}
-        <div className="flex items-center gap-4 mb-6">
-          <div className="size-14 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center shrink-0">
-            <svg
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="size-7 text-primary ml-0.5"
-            >
+        <div className="mb-6 flex items-center gap-4">
+          <div className="bg-primary/10 border-primary/30 flex size-14 shrink-0 items-center justify-center rounded-full border">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="text-primary ml-0.5 size-7">
               <path d="M8 5v14l11-7z" />
             </svg>
           </div>
           <div>
-            <p className="text-xl font-black text-primary leading-tight">
-              TruongLX
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Phim hay, xem thả ga
-            </p>
+            <p className="text-primary text-xl leading-tight font-black">TruongLX</p>
+            <p className="text-muted-foreground text-sm">Phim hay, xem thả ga</p>
           </div>
         </div>
 
         {/* Nav links */}
-        <nav className="flex flex-wrap gap-x-6 gap-y-2 mb-6">
+        <nav className="mb-6 flex flex-wrap gap-x-6 gap-y-2">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href + link.label}
               href={link.href}
-              className="text-sm text-foreground/70 hover:text-primary transition-colors"
+              className="text-foreground/70 hover:text-primary text-sm transition-colors"
             >
               {link.label}
             </Link>
@@ -55,15 +47,14 @@ export default function Footer() {
         </nav>
 
         {/* Description */}
-        <p className="text-sm text-muted-foreground max-w-xl leading-relaxed mb-6">
-          TruongLX — Trang xem phim online chất lượng cao miễn phí Vietsub,
-          thuyết minh, lồng tiếng full HD. Kho phim mới khổng lồ, phim chiếu
-          rạp, phim bộ, phim lẻ từ nhiều quốc gia như Việt Nam, Hàn Quốc, Trung
-          Quốc, Thái Lan, Nhật Bản, Âu Mỹ... đa dạng thể loại.
+        <p className="text-muted-foreground mb-6 max-w-xl text-sm leading-relaxed">
+          TruongLX — Trang xem phim online chất lượng cao miễn phí Vietsub, thuyết minh, lồng tiếng
+          full HD. Kho phim mới khổng lồ, phim chiếu rạp, phim bộ, phim lẻ từ nhiều quốc gia như
+          Việt Nam, Hàn Quốc, Trung Quốc, Thái Lan, Nhật Bản, Âu Mỹ... đa dạng thể loại.
         </p>
 
         {/* Copyright */}
-        <p className="text-xs text-muted-foreground/60">
+        <p className="text-muted-foreground/60 text-xs">
           © {new Date().getFullYear()} TruongLX. All rights reserved.
         </p>
       </div>

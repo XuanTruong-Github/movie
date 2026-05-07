@@ -3,11 +3,7 @@
 import { createPlayer, videoFeatures } from "@videojs/react";
 import { Video, VideoSkin } from "@videojs/react/video";
 import { cn } from "@/lib/utils";
-import {
-  MovieDetailResponse,
-  MovieEpisode,
-  MovieEpisodeServer,
-} from "@/lib/types";
+import { MovieDetailResponse, MovieEpisode, MovieEpisodeServer } from "@/lib/types";
 import { ComponentProps, useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Button } from "../ui/button";
@@ -44,10 +40,7 @@ function readPlaybackProgress(): PlaybackProgress | null {
 
 function writePlaybackProgress(progress: PlaybackProgress) {
   try {
-    window.localStorage.setItem(
-      getPlaybackStorageKey(),
-      JSON.stringify(progress),
-    );
+    window.localStorage.setItem(getPlaybackStorageKey(), JSON.stringify(progress));
   } catch {
     // Ignore localStorage failures silently.
   }
@@ -56,14 +49,12 @@ function writePlaybackProgress(progress: PlaybackProgress) {
 // Inner component: restore position + throttled save — must be inside VJSPlayer.Provider
 function PlaybackManager({ currentMovie }: { currentMovie: MovieEpisode }) {
   const store = VJSPlayer.usePlayer();
-  const { currentTime, paused, ended, duration } = VJSPlayer.usePlayer(
-    (s) => ({
-      currentTime: s.currentTime,
-      paused: s.paused,
-      ended: s.ended,
-      duration: s.duration,
-    }),
-  );
+  const { currentTime, paused, ended, duration } = VJSPlayer.usePlayer((s) => ({
+    currentTime: s.currentTime,
+    paused: s.paused,
+    ended: s.ended,
+    duration: s.duration,
+  }));
   const lastSavedRef = useRef(0);
   const restoredRef = useRef(false);
 
@@ -119,11 +110,7 @@ function SeekButtons() {
       >
         -10s
       </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() => store.seek(currentTime + 10)}
-      >
+      <Button variant="secondary" size="sm" onClick={() => store.seek(currentTime + 10)}>
         +10s
       </Button>
     </div>
@@ -136,8 +123,7 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
   );
   const [isIPhone] = useState(
     () =>
-      typeof navigator !== "undefined" &&
-      /iPhone/i.test(navigator.userAgent || navigator.vendor),
+      typeof navigator !== "undefined" && /iPhone/i.test(navigator.userAgent || navigator.vendor),
   );
 
   // Restore last-watched episode from localStorage on mount
@@ -176,7 +162,7 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
     <div className={cn(className)} {...props}>
       {currentMovie?.link_m3u8 ? (
         <div className="mb-4">
-          <div className="border bg-black rounded-lg overflow-hidden aspect-video mb-2">
+          <div className="mb-2 aspect-video overflow-hidden rounded-lg border bg-black">
             {/* key forces Provider remount on episode change, cleanly resetting player state */}
             <VJSPlayer.Provider key={currentMovie.link_m3u8}>
               <VideoSkin className="h-full w-full">
@@ -188,7 +174,7 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
           </div>
         </div>
       ) : (
-        <div className="border bg-black rounded-lg overflow-hidden aspect-video mb-2 flex items-center justify-center">
+        <div className="mb-2 flex aspect-video items-center justify-center overflow-hidden rounded-lg border bg-black">
           Không có link phim
         </div>
       )}
@@ -205,7 +191,7 @@ export default function MoviePlayer({ className, movie, ...props }: Props) {
           <TabsContent
             key={index}
             value={String(index)}
-            className="flex flex-wrap gap-2 bg-card p-4 rounded-lg border"
+            className="bg-card flex flex-wrap gap-2 rounded-lg border p-4"
           >
             {item.server_data.map((ep: MovieEpisode, epIndex: number) => (
               <Button

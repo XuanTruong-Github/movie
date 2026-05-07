@@ -16,8 +16,8 @@ export default function HeaderShell({ children }: { children: React.ReactNode })
     <header
       className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
         scrolled
-          ? "border-white/5 bg-background/90 backdrop-blur-md"
-          : "lg:border-transparent lg:bg-transparent border-white/5 bg-background/90 backdrop-blur-md"
+          ? "bg-background/90 border-white/5 backdrop-blur-md"
+          : "bg-background/90 border-white/5 backdrop-blur-md lg:border-transparent lg:bg-transparent"
       }`}
     >
       {children}

@@ -26,10 +26,11 @@ All external data comes from single API endpoint:
 
 ```typescript
 // configs/api.ts (use server)
-fetch(BASE_URL + "/v1/api" + path)
+fetch(BASE_URL + "/v1/api" + path);
 ```
 
 **Important:** Each page defines its own local `getData()` / `getMovie()` function, called **separately** in both:
+
 1. `generateMetadata()` for SSR metadata
 2. The page component itself
 
@@ -37,12 +38,12 @@ fetch(BASE_URL + "/v1/api" + path)
 
 ## Component Architecture
 
-| Directory | Purpose |
-|-----------|---------|
-| `components/ui/` | shadcn/ui primitives + hand-rolled SVG icons |
-| `components/layout/` | Header, Footer, layout wrappers |
-| `components/home/` | Homepage feature components |
-| `components/movie/` | Movie detail & player components |
+| Directory            | Purpose                                      |
+| -------------------- | -------------------------------------------- |
+| `components/ui/`     | shadcn/ui primitives + hand-rolled SVG icons |
+| `components/layout/` | Header, Footer, layout wrappers              |
+| `components/home/`   | Homepage feature components                  |
+| `components/movie/`  | Movie detail & player components             |
 
 Feature component props extend `ComponentProps<"div">` and spread `...props` with `className` merged via `cn()` from `lib/utils.ts`.
 

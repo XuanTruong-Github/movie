@@ -22,15 +22,15 @@ export default async function Header() {
   const countries = await getMenu("/quoc-gia");
   return (
     <HeaderShell>
-      <section className="flex items-center h-14 gap-x-4 lg:gap-x-6 container">
-        <Link href="/" className="font-black text-primary text-xl tracking-tight shrink-0 order-1">
+      <section className="container flex h-14 items-center gap-x-4 lg:gap-x-6">
+        <Link href="/" className="text-primary order-1 shrink-0 text-xl font-black tracking-tight">
           TruongLX
         </Link>
         <Suspense fallback={null}>
           <Menu categories={categories} countries={countries} />
         </Suspense>
         <Suspense fallback={null}>
-          <Search className="ml-auto flex-1 max-w-xs order-2" />
+          <Search className="order-2 ml-auto max-w-xs flex-1" />
         </Suspense>
       </section>
     </HeaderShell>

@@ -16,11 +16,11 @@ type: project
 
 ## Export Patterns
 
-| Type | Pattern |
-|------|---------|
-| Pages/Layouts/Feature Components | Default export |
-| UI Primitives (buttons, cards, etc.) | Named exports |
-| Types & Constants | Named exports |
+| Type                                 | Pattern        |
+| ------------------------------------ | -------------- |
+| Pages/Layouts/Feature Components     | Default export |
+| UI Primitives (buttons, cards, etc.) | Named exports  |
+| Types & Constants                    | Named exports  |
 
 ## Component Props
 

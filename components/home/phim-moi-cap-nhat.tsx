@@ -1,4 +1,5 @@
-import { api } from "@/configs/api";
+"use client";
+import { MovieListItem } from "@/lib/types";
 import {
   Carousel,
   CarouselContent,
@@ -9,47 +10,11 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
-import { ComponentProps } from "react";
-import { cn } from "@/lib/utils";
-import { MovieListItem, MovieListResponse } from "@/lib/types";
-import { Button } from "../ui/button";
-import { ChevronRight } from "@/components/ui/icons";
 
-async function getData(type: string): Promise<MovieListResponse | null> {
-  try {
-    const response = await api(`/danh-sach/${type}?limit=15`, {
-      next: { revalidate: 120 },
-    });
-    if (!response.ok) throw new Error(response.statusText);
-    const { data } = await response.json();
-    return data;
-  } catch (error) {
-    console.log("error: ", error);
-    return null;
-  }
-}
-
-type Props = { type: string } & ComponentProps<"section">;
-
-export default async function SectionMovies({ type, className, ...props }: Props) {
-  const data = await getData(type);
-
+export default function PhimMoiCapNhat({ data }: { data: any }) {
   return (
-    <section className={cn("container", className)} {...props}>
-      <h2 className="border-primary mb-4 flex items-center gap-3 border-l-[3px] pl-3 lg:mb-6">
-        {data?.titlePage}
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          className="rounded-full opacity-60 hover:opacity-100"
-          asChild
-        >
-          <Link href="/danh-sach/phim-chieu-rap" title={data?.titlePage}>
-            <ChevronRight />
-          </Link>
-        </Button>
-      </h2>
-
+    <section className="container mb-10">
+      <h2 className="border-primary mb-4 border-l-[3px] pl-3 lg:mb-6">Phim mới cập nhật</h2>
       <Carousel opts={{ dragFree: true, slidesToScroll: 2 }}>
         <CarouselContent>
           {data?.items?.map((item: MovieListItem) => {

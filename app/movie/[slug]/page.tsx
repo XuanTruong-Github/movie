@@ -9,21 +9,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { api } from "@/configs/api";
 import { toOpenGraphType } from "@/lib/metadata";
-import {
-  BreadcrumbItemData,
-  MovieCategory,
-  MovieCountry,
-  MovieDetailResponse,
-} from "@/lib/types";
+import { BreadcrumbItemData, MovieCategory, MovieCountry, MovieDetailResponse } from "@/lib/types";
 import { Metadata } from "next";
 import Link from "next/link";
 import { Fragment } from "react/jsx-runtime";
@@ -94,9 +83,7 @@ export default async function Page({ params }: Props) {
             if (item.isCurrent)
               return (
                 <BreadcrumbItem key={index}>
-                  <BreadcrumbPage className="font-bold">
-                    {item.name}
-                  </BreadcrumbPage>
+                  <BreadcrumbPage className="font-bold">{item.name}</BreadcrumbPage>
                 </BreadcrumbItem>
               );
             return (
@@ -121,9 +108,7 @@ export default async function Page({ params }: Props) {
           <CardTitle>
             {movie.item.status === "trailer" ? "Trailer" : ""} {movie.item.name}
           </CardTitle>
-          <CardDescription className="text-primary">
-            {movie.item.origin_name}
-          </CardDescription>
+          <CardDescription className="text-primary">{movie.item.origin_name}</CardDescription>
         </CardHeader>
         <CardContent>
           <div
@@ -135,16 +120,14 @@ export default async function Page({ params }: Props) {
 
       <Card>
         <CardHeader className="pb-0">
-          <CardTitle className="text-base border-l-[3px] border-primary pl-3">
+          <CardTitle className="border-primary border-l-[3px] pl-3 text-base">
             Thông tin phim
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-4">
-          <dl className="text-sm divide-y divide-border/50">
+          <dl className="divide-border/50 divide-y text-sm">
             <div className="flex gap-4 py-2.5">
-              <dt className="w-28 shrink-0 text-muted-foreground">
-                Chất lượng
-              </dt>
+              <dt className="text-muted-foreground w-28 shrink-0">Chất lượng</dt>
               <dd className="flex flex-wrap gap-1.5">
                 <Badge variant="secondary" className="rounded">
                   {movie.item.quality}
@@ -156,28 +139,26 @@ export default async function Page({ params }: Props) {
             </div>
 
             <div className="flex gap-4 py-2.5">
-              <dt className="w-28 shrink-0 text-muted-foreground">
-                Năm phát hành
-              </dt>
+              <dt className="text-muted-foreground w-28 shrink-0">Năm phát hành</dt>
               <dd>{movie.item.year}</dd>
             </div>
 
             {movie.item.type === "series" && (
               <div className="flex gap-4 py-2.5">
-                <dt className="w-28 shrink-0 text-muted-foreground">Số tập</dt>
+                <dt className="text-muted-foreground w-28 shrink-0">Số tập</dt>
                 <dd>{movie.item.episode_total}</dd>
               </div>
             )}
 
             <div className="flex gap-4 py-2.5">
-              <dt className="w-28 shrink-0 text-muted-foreground">Thể loại</dt>
+              <dt className="text-muted-foreground w-28 shrink-0">Thể loại</dt>
               <dd className="flex flex-wrap gap-1.5">
                 {movie.item.category.map((cat: MovieCategory) => (
                   <Badge
                     key={cat.slug}
                     variant="outline"
                     asChild
-                    className="rounded hover:border-primary/60 hover:text-primary transition-colors"
+                    className="hover:border-primary/60 hover:text-primary rounded transition-colors"
                   >
                     <Link href={`/the-loai/${cat.slug}`}>{cat.name}</Link>
                   </Badge>
@@ -186,14 +167,14 @@ export default async function Page({ params }: Props) {
             </div>
 
             <div className="flex gap-4 py-2.5">
-              <dt className="w-28 shrink-0 text-muted-foreground">Quốc gia</dt>
+              <dt className="text-muted-foreground w-28 shrink-0">Quốc gia</dt>
               <dd className="flex flex-wrap gap-1.5">
                 {movie.item.country.map((c: MovieCountry) => (
                   <Badge
                     key={c.slug}
                     variant="outline"
                     asChild
-                    className="rounded hover:border-primary/60 hover:text-primary transition-colors"
+                    className="hover:border-primary/60 hover:text-primary rounded transition-colors"
                   >
                     <Link href={`/quoc-gia/${c.slug}`}>{c.name}</Link>
                   </Badge>
@@ -202,15 +183,14 @@ export default async function Page({ params }: Props) {
             </div>
 
             <div className="flex gap-4 py-2.5">
-              <dt className="w-28 shrink-0 text-muted-foreground">Diễn viên</dt>
+              <dt className="text-muted-foreground w-28 shrink-0">Diễn viên</dt>
               <dd className="text-foreground/80">
-                {movie.item.actor.filter((a: string) => !!a).join(", ") ||
-                  "Đang cập nhật"}
+                {movie.item.actor.filter((a: string) => !!a).join(", ") || "Đang cập nhật"}
               </dd>
             </div>
 
             <div className="flex gap-4 py-2.5">
-              <dt className="w-28 shrink-0 text-muted-foreground">Đạo diễn</dt>
+              <dt className="text-muted-foreground w-28 shrink-0">Đạo diễn</dt>
               <dd className="text-foreground/80">
                 {movie.item.director?.join(", ") || "Đang cập nhật"}
               </dd>

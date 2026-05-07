@@ -11,10 +11,7 @@ function getYouTubeEmbedUrl(url: string): string | null {
 
     if (parsed.hostname === "youtu.be") {
       videoId = parsed.pathname.slice(1);
-    } else if (
-      parsed.hostname === "www.youtube.com" ||
-      parsed.hostname === "youtube.com"
-    ) {
+    } else if (parsed.hostname === "www.youtube.com" || parsed.hostname === "youtube.com") {
       videoId = parsed.searchParams.get("v");
     }
 
@@ -29,7 +26,7 @@ export default function Trailer({ movie, className, ...props }: Props) {
     return (
       <div
         className={cn(
-          "aspect-video mb-6 rounded-xl border flex justify-center items-center",
+          "mb-6 flex aspect-video items-center justify-center rounded-xl border",
           className,
         )}
         {...props}
@@ -44,7 +41,7 @@ export default function Trailer({ movie, className, ...props }: Props) {
     return (
       <div
         className={cn(
-          "aspect-video mb-6 rounded-xl border flex justify-center items-center",
+          "mb-6 flex aspect-video items-center justify-center rounded-xl border",
           className,
         )}
         {...props}
@@ -56,10 +53,7 @@ export default function Trailer({ movie, className, ...props }: Props) {
   return (
     <div
       {...props}
-      className={cn(
-        "w-full aspect-video mb-6 rounded-xl overflow-hidden",
-        className,
-      )}
+      className={cn("mb-6 aspect-video w-full overflow-hidden rounded-xl", className)}
     >
       <iframe
         src={embedUrl}

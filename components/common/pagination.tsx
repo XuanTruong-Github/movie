@@ -55,13 +55,13 @@ export default function CustomPagination({ data, basePath, hrefBuilder }: Props)
         onClick={() => navigate(current - 1)}
         disabled={current <= 1}
         aria-label="Trang trước"
-        className="size-10 rounded-full bg-secondary flex items-center justify-center text-foreground/70 hover:text-foreground disabled:opacity-30 disabled:pointer-events-none transition-colors"
+        className="bg-secondary text-foreground/70 hover:text-foreground flex size-10 items-center justify-center rounded-full transition-colors disabled:pointer-events-none disabled:opacity-30"
       >
         <ChevronLeft size={18} />
       </button>
 
       {/* Page pill */}
-      <div className="flex items-center gap-1.5 bg-secondary rounded-full px-5 h-10 text-sm text-foreground/70">
+      <div className="bg-secondary text-foreground/70 flex h-10 items-center gap-1.5 rounded-full px-5 text-sm">
         <span>Trang</span>
         <input
           type="text"
@@ -70,7 +70,7 @@ export default function CustomPagination({ data, basePath, hrefBuilder }: Props)
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={handleBlur}
-          className="w-10 text-center bg-background/60 text-foreground rounded px-1 py-0.5 text-sm outline-none focus:ring-1 focus:ring-ring"
+          className="bg-background/60 text-foreground focus:ring-ring w-10 rounded px-1 py-0.5 text-center text-sm outline-none focus:ring-1"
           aria-label="Số trang"
         />
         <span>/ {totalPages}</span>
@@ -81,7 +81,7 @@ export default function CustomPagination({ data, basePath, hrefBuilder }: Props)
         onClick={() => navigate(current + 1)}
         disabled={current >= totalPages}
         aria-label="Trang sau"
-        className="size-10 rounded-full bg-secondary flex items-center justify-center text-foreground/70 hover:text-foreground disabled:opacity-30 disabled:pointer-events-none transition-colors"
+        className="bg-secondary text-foreground/70 hover:text-foreground flex size-10 items-center justify-center rounded-full transition-colors disabled:pointer-events-none disabled:opacity-30"
       >
         <ChevronRight size={18} />
       </button>
