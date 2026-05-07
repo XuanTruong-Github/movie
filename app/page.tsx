@@ -54,9 +54,7 @@ export default async function Home() {
   return (
     <>
       <PhimMoiCapNhat data={data} />
-      <SectionMovies type="phim-chieu-rap" className="mb-6 lg:mb-10" />
-      <SectionMovies type="phim-le" className="mb-6 lg:mb-10" />
-      <SectionMovies type="phim-bo" />
+      <SectionMovies type="phim-chieu-rap" />
     </>
   );
 }
