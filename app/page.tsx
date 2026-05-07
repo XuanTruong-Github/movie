@@ -7,7 +7,7 @@ import { Metadata } from "next";
 
 async function getData(): Promise<MovieListResponse | null> {
   try {
-    const response = await api("/home", { next: { revalidate: 120 } });
+    const response = await api("/home", { next: { revalidate: 3600 } });
     if (!response.ok) throw new Error(response.statusText);
     const { data } = await response.json();
     return data;
