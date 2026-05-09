@@ -13,7 +13,7 @@ export function SiteHeader() {
           <span className="grid size-9 place-items-center rounded-md bg-primary text-primary-foreground">
             <FilmIcon className="size-5" />
           </span>
-          <span>KK Cinema</span>
+          <span>TruongLX Movie</span>
         </Link>
         <nav className="hidden items-center gap-1 lg:flex">
           {movieTypes.slice(0, 4).map((type) => (
