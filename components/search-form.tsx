@@ -19,7 +19,7 @@ export function SearchForm({ defaultValue = "", compact = false }: { defaultValu
   }
 
   return (
-    <form className={compact ? "flex min-w-0 flex-1 gap-2" : "mx-auto flex w-full max-w-2xl gap-2"} onSubmit={onSubmit}>
+    <form className={compact ? "flex min-w-0 flex-1 gap-2" : "flex w-full max-w-2xl gap-2"} onSubmit={onSubmit}>
       <Input
         aria-label="Tìm kiếm phim"
         placeholder="Tìm phim, diễn viên, anime..."

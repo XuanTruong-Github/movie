@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "KK Cinema",
+  title: "TruongLX-Movie",
   description: "Website xem phim dùng dữ liệu KKPhim.",
 };
 

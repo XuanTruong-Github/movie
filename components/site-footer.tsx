@@ -28,13 +28,6 @@ const footerLinks = {
       { label: "Chính sách riêng tư", href: "#" },
     ],
   },
-  resources: {
-    title: "Tài nguyên",
-    links: [
-      { label: "API Reference", href: "https://phimapi.com" },
-      { label: "Gửi phản hồi", href: "#" },
-    ],
-  },
 };
 
 export function SiteFooter() {
@@ -44,15 +37,23 @@ export function SiteFooter() {
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           {Object.values(footerLinks).map((section) => (
             <div key={section.title}>
-              <h3 className="mb-4 font-semibold text-foreground">{section.title}</h3>
+              <h3 className="mb-4 font-semibold text-foreground">
+                {section.title}
+              </h3>
               <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
                       className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                      target={link.href.startsWith("http") ? "_blank" : undefined}
-                      rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      target={
+                        link.href.startsWith("http") ? "_blank" : undefined
+                      }
+                      rel={
+                        link.href.startsWith("http")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
                     >
                       {link.label}
                     </Link>
@@ -66,15 +67,7 @@ export function SiteFooter() {
       <div className="border-t border-border bg-background py-4 px-3">
         <div className="container text-center">
           <p className="text-xs text-muted-foreground">
-            © 2024 KK Cinema. Powered by{" "}
-            <a
-              href="https://phimapi.com"
-              className="hover:text-primary transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              KKPhim API
-            </a>
+            © 2024 TruongLX-Movie. Powered by
           </p>
         </div>
       </div>

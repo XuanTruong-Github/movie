@@ -20,13 +20,6 @@ export default async function HomePage() {
     <div className="flex flex-col gap-10 pb-12">
       <section className="border-b border-border bg-black/20 py-10 md:py-14">
         <div className="container flex flex-col gap-7">
-          <div className="max-w-3xl">
-            <Badge variant="outline">KKPhim API</Badge>
-            <h1 className="mt-4 text-4xl font-semibold tracking-normal md:text-6xl">Xem phim mới, chọn tập nhanh, phát HLS mượt.</h1>
-            <p className="mt-4 text-base leading-7 text-muted-foreground md:text-lg">
-              Duyệt phim mới cập nhật, phim lẻ, phim bộ, hoạt hình và tìm kiếm nội dung từ nguồn KKPhim.
-            </p>
-          </div>
           <SearchForm />
           <div className="flex flex-wrap gap-2">
             {movieTypes.map((type) => (
