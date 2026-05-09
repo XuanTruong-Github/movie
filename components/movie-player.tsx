@@ -19,6 +19,7 @@ const Player = createPlayer({
 
 const PLAYBACK_RATES = [0.75, 1, 1.25, 1.5, 2];
 const noopSubscribe = () => () => {};
+type PlaybackMode = "hls" | "embed" | "unavailable";
 
 function progressKey(movieSlug: string, serverIndex: number, episodeSlug: string) {
   return `kkcinema:progress:${movieSlug}:${serverIndex}:${episodeSlug}`;
@@ -53,16 +54,22 @@ export function MoviePlayer({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const frameRef = useRef<HTMLDivElement | null>(null);
   const [rate, setRate] = useState(1);
+  const [failedHlsSource, setFailedHlsSource] = useState<string | null>(null);
   const canPlayHls = useBrowserHlsSupport();
   const storageKey = useMemo(() => progressKey(movieSlug, serverIndex, episode.slug || episode.name), [episode.name, episode.slug, movieSlug, serverIndex]);
+  const hlsSourceKey = `${episode.linkM3u8 ?? ""}|${episode.linkEmbed ?? ""}`;
+  const hlsFailed = failedHlsSource === hlsSourceKey;
+  const playbackMode: PlaybackMode = episode.linkM3u8 && canPlayHls && !hlsFailed ? "hls" : episode.linkEmbed ? "embed" : "unavailable";
 
   useEffect(() => {
+    if (playbackMode !== "hls") return;
     const video = videoRef.current;
     if (!video) return;
     video.playbackRate = rate;
-  }, [rate]);
+  }, [playbackMode, rate]);
 
   useEffect(() => {
+    if (playbackMode !== "hls") return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -81,34 +88,47 @@ export function MoviePlayer({
       window.localStorage.removeItem(storageKey);
       if (nextEpisodeHref) router.push(nextEpisodeHref);
     };
+    const onError = () => {
+      setFailedHlsSource(hlsSourceKey);
+    };
 
     video.addEventListener("loadedmetadata", onLoadedMetadata);
     video.addEventListener("timeupdate", onTimeUpdate);
     video.addEventListener("ended", onEnded);
+    video.addEventListener("error", onError);
+
+    const errorCheck = window.setTimeout(() => {
+      if (video.readyState === 0 && video.error) setFailedHlsSource(hlsSourceKey);
+    }, 1500);
+
     return () => {
+      window.clearTimeout(errorCheck);
       video.removeEventListener("loadedmetadata", onLoadedMetadata);
       video.removeEventListener("timeupdate", onTimeUpdate);
       video.removeEventListener("ended", onEnded);
+      video.removeEventListener("error", onError);
     };
-  }, [nextEpisodeHref, rate, router, storageKey]);
+  }, [hlsSourceKey, nextEpisodeHref, playbackMode, rate, router, storageKey]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable) return;
       const video = videoRef.current;
-      if (!video) return;
 
       if (event.code === "Space") {
+        if (!video) return;
         event.preventDefault();
         if (video.paused) void video.play();
         else video.pause();
       }
       if (event.key === "ArrowLeft") {
+        if (!video) return;
         event.preventDefault();
         video.currentTime = Math.max(0, video.currentTime - 10);
       }
       if (event.key === "ArrowRight") {
+        if (!video) return;
         event.preventDefault();
         video.currentTime = Math.min(video.duration || video.currentTime + 10, video.currentTime + 10);
       }
@@ -117,12 +137,12 @@ export function MoviePlayer({
         void frameRef.current?.requestFullscreen?.();
       }
     };
-    
+
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  if ((!episode.linkM3u8 || !canPlayHls) && episode.linkEmbed) {
+  if (playbackMode === "embed" && episode.linkEmbed) {
     return (
       <div className="flex flex-col gap-3">
         <div ref={frameRef} className="overflow-hidden rounded-lg border border-border bg-black">
@@ -134,6 +154,11 @@ export function MoviePlayer({
             className="aspect-video w-full"
           />
         </div>
+        {hlsFailed ? (
+          <p className="rounded-lg border border-border bg-card p-3 text-sm text-muted-foreground">
+            Nguồn HLS không phát được, đang dùng nguồn embed dự phòng.
+          </p>
+        ) : null}
         {!canPlayHls && episode.linkM3u8 ? (
           <p className="rounded-lg border border-border bg-card p-3 text-sm text-muted-foreground">
             Trình duyệt hiện tại không hỗ trợ HLS native, nên player đang dùng nguồn embed dự phòng.
@@ -143,10 +168,10 @@ export function MoviePlayer({
     );
   }
 
-  if (!episode.linkM3u8) {
+  if (playbackMode === "unavailable") {
     return (
       <div className="grid aspect-video place-items-center rounded-lg border border-border bg-card p-6 text-center text-muted-foreground">
-        Tập này chưa có link phát khả dụng.
+        {hlsFailed ? "Nguồn phát của tập này hiện không khả dụng." : "Tập này chưa có link phát khả dụng."}
       </div>
     );
   }
@@ -164,6 +189,7 @@ export function MoviePlayer({
               controls
               preload="metadata"
               crossOrigin="anonymous"
+              onError={() => setFailedHlsSource(hlsSourceKey)}
             >
               <source src={episode.linkM3u8} type="application/x-mpegURL" />
             </Video>
