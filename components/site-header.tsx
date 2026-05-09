@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FilmIcon, SearchIcon } from "lucide-react";
+import { FilmIcon } from "lucide-react";
 import Link from "next/link";
 
+import { SearchForm } from "@/components/search-form";
 import { movieTypes } from "@/lib/movie-types";
 
 export function SiteHeader() {
@@ -17,7 +18,7 @@ export function SiteHeader() {
 
   return (
     <header
-      className="fixed top-0 z-50 w-full transition-all duration-300"
+      className="sticky top-0 z-50 w-full transition-all duration-300"
       style={{
         background: scrolled
           ? "#141414"
@@ -25,7 +26,10 @@ export function SiteHeader() {
       }}
     >
       <div className="container flex h-16 items-center gap-6">
-        <Link href="/" className="flex shrink-0 items-center gap-1.5 select-none">
+        <Link
+          href="/"
+          className="flex shrink-0 items-center gap-1.5 select-none"
+        >
           <FilmIcon className="size-5 text-primary" />
           <span
             className="text-2xl tracking-widest text-primary leading-none"
@@ -47,15 +51,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-3">
-          <Link
-            href="/tim-kiem"
-            className="grid size-9 place-items-center rounded-full text-white/70 transition hover:text-white"
-            aria-label="Tìm kiếm"
-          >
-            <SearchIcon className="size-5" />
-          </Link>
-        </div>
+        <SearchForm compact />
       </div>
     </header>
   );

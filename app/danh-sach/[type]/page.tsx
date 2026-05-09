@@ -1,7 +1,14 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
+
+export const revalidate = 300;
 
 import { MovieGrid } from "@/components/movie-grid";
 import { PaginationBar } from "@/components/pagination-bar";
+import {
+  Breadcrumb, BreadcrumbItem, BreadcrumbLink,
+  BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { getLatestMovies, getMoviesByType, movieTypes } from "@/lib/kkphim";
 import { clampPage } from "@/lib/utils";
 
@@ -22,6 +29,17 @@ export default async function MovieTypePage({ params, searchParams }: PageProps)
 
   return (
     <div className="container flex flex-col gap-6 py-8">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link href="/">Trang chủ</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{title}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div>
         <p className="text-sm text-muted-foreground">Danh sách phim</p>
         <h1 className="text-3xl font-semibold tracking-normal">{title}</h1>

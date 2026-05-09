@@ -1,18 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PlayCircleIcon } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import type { MovieSummary } from "@/lib/types";
 
-export function MovieCard({ movie, priority = false }: { movie: MovieSummary; priority?: boolean }) {
+export function MovieCard({
+  movie,
+  priority = false,
+}: {
+  movie: MovieSummary;
+  priority?: boolean;
+}) {
   const poster = movie.posterUrl ?? movie.thumbUrl;
 
   return (
-    <div className="group relative shrink-0">
+    <div className="group">
       <Link
         href={`/phim/${movie.slug}`}
         className="block rounded overflow-hidden"
-        style={{ width: "100%" }}
       >
         {/* Poster */}
         <div className="relative aspect-2/3 bg-card overflow-hidden rounded">
@@ -35,50 +40,40 @@ export function MovieCard({ movie, priority = false }: { movie: MovieSummary; pr
           <div className="absolute bottom-0 inset-x-0 bg-linear-to-t from-black/90 to-transparent p-2">
             <div className="flex flex-wrap gap-1">
               {movie.quality ? (
-                <span className="rounded px-1.5 py-0.5 text-[10px] font-semibold bg-primary text-white leading-none">
+                <Badge
+                  variant="default"
+                  className="text-[10px] leading-none px-1.5 py-0.5"
+                >
                   {movie.quality}
-                </span>
+                </Badge>
               ) : null}
               {movie.lang ? (
-                <span className="rounded border border-white/30 px-1.5 py-0.5 text-[10px] text-white/80 leading-none">
+                <Badge
+                  variant="outline"
+                  className="text-[10px] leading-none px-1.5 py-0.5 border-white/30 text-white/80"
+                >
                   {movie.lang}
-                </span>
+                </Badge>
               ) : null}
             </div>
-          </div>
-        </div>
-
-        {/* Hover info panel */}
-        <div className="absolute inset-x-0 top-full z-20 translate-y-0 opacity-0 transition-all duration-200 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto">
-          <div className="rounded-b bg-[#181818] shadow-2xl shadow-black/60 p-3 border border-[#333] border-t-0">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="grid size-8 place-items-center rounded-full bg-white text-black hover:bg-white/90 shrink-0">
-                <PlayCircleIcon className="size-5 fill-black" />
-              </div>
-            </div>
-            <h3 className="text-sm font-semibold text-white line-clamp-2 leading-5 mb-1">
-              {movie.name}
-            </h3>
-            {movie.originName && (
-              <p className="text-xs text-muted-foreground line-clamp-1 mb-1.5">{movie.originName}</p>
-            )}
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              {movie.year && <span className="text-[#46d369] font-semibold">{movie.year}</span>}
-              {movie.episodeCurrent && <span>{movie.episodeCurrent}</span>}
-              {movie.time && !movie.episodeCurrent && <span>{movie.time}</span>}
-            </div>
-            {movie.categories.length > 0 && (
-              <div className="mt-1.5 flex flex-wrap gap-1">
-                {movie.categories.slice(0, 2).map((cat) => (
-                  <span key={cat.slug} className="text-[10px] text-muted-foreground">
-                    {cat.name}
-                  </span>
-                ))}
-              </div>
-            )}
           </div>
         </div>
       </Link>
+
+      {/* Info — always visible */}
+      <div className="mt-1.5 px-0.5">
+        <Link href={`/phim/${movie.slug}`} className="inline-block mb-1">
+          <h3 className="text-sm font-medium text-white line-clamp-2 leading-5 hover:text-primary transition-colors">
+            {movie.name}
+          </h3>
+        </Link>
+        <p className="text-xs/normal text-muted-foreground">
+          {movie.originName}
+        </p>
+        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+          {movie.episodeCurrent && <Badge variant={'secondary'}>{movie.episodeCurrent}</Badge>}
+        </div>
+      </div>
     </div>
   );
 }

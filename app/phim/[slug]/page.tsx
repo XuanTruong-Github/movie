@@ -3,7 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PlayIcon } from "lucide-react";
 
+export const revalidate = 600;
+
 import { Badge } from "@/components/ui/badge";
+import {
+  Breadcrumb, BreadcrumbItem, BreadcrumbLink,
+  BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getMovieDetail } from "@/lib/kkphim";
@@ -19,7 +25,11 @@ export default async function MovieDetailPage({ params }: PageProps) {
 
   const backdrop = movie.thumbUrl ?? movie.posterUrl;
   const firstPlayable = episodes.flatMap((server, serverIndex) =>
-    server.serverData.map((episode, episodeIndex) => ({ episode, serverIndex, episodeIndex })),
+    server.serverData.map((episode, episodeIndex) => ({
+      episode,
+      serverIndex,
+      episodeIndex,
+    })),
   )[0];
 
   return (
@@ -44,27 +54,40 @@ export default async function MovieDetailPage({ params }: PageProps) {
           <div className="container pb-10">
             <h1
               className="text-4xl text-white md:text-6xl"
-              style={{ fontFamily: "var(--font-display)", letterSpacing: "0.02em" }}
+              style={{
+                fontFamily: "var(--font-display)",
+                letterSpacing: "0.02em",
+              }}
             >
               {movie.name}
             </h1>
             {movie.originName && (
-              <p className="mt-1 text-sm text-white/60 md:text-base">{movie.originName}</p>
+              <p className="mt-1 text-sm text-white/60 md:text-base">
+                {movie.originName}
+              </p>
             )}
             <div className="mt-3 flex flex-wrap gap-2">
               {movie.year && (
-                <span className="text-sm font-semibold text-[#46d369]">{movie.year}</span>
+                <span className="text-sm font-semibold text-[#46d369]">
+                  {movie.year}
+                </span>
               )}
-              {movie.quality && <Badge>{movie.quality}</Badge>}
+              {movie.quality && (
+                <Badge variant={"default"}>{movie.quality}</Badge>
+              )}
               {movie.lang && <Badge variant="outline">{movie.lang}</Badge>}
-              {movie.episodeCurrent && <Badge variant="outline">{movie.episodeCurrent}</Badge>}
+              {movie.episodeCurrent && (
+                <Badge variant="outline">{movie.episodeCurrent}</Badge>
+              )}
               {movie.time && <Badge variant="secondary">{movie.time}</Badge>}
             </div>
             {firstPlayable && (
               <div className="mt-5 flex gap-3">
-                <Button asChild size="default" className="gap-2 bg-white text-black hover:bg-white/80">
-                  <Link href={`/xem/${movie.slug}?server=${firstPlayable.serverIndex}&episode=${firstPlayable.episodeIndex}`}>
-                    <PlayIcon className="size-4 fill-black" />
+                <Button asChild size="default" className="gap-2">
+                  <Link
+                    href={`/xem/${movie.slug}?server=${firstPlayable.serverIndex}&episode=${firstPlayable.episodeIndex}`}
+                  >
+                    <PlayIcon className="size-4" />
                     Xem phim
                   </Link>
                 </Button>
@@ -76,6 +99,17 @@ export default async function MovieDetailPage({ params }: PageProps) {
 
       {/* Content below hero */}
       <div className="container py-8">
+        <Breadcrumb className="mb-6">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild><Link href="/">Trang chủ</Link></BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{movie.name}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
           {/* Sidebar poster */}
           <div className="hidden lg:block">
@@ -96,7 +130,9 @@ export default async function MovieDetailPage({ params }: PageProps) {
           <div className="flex flex-col gap-6">
             {movie.content && (
               <section>
-                <h2 className="mb-3 text-lg font-semibold text-white">Nội dung</h2>
+                <h2 className="mb-3 text-lg font-semibold text-white">
+                  Nội dung
+                </h2>
                 <div
                   className="movie-content text-sm leading-7 text-muted-foreground md:text-base"
                   dangerouslySetInnerHTML={{ __html: movie.content }}
@@ -112,8 +148,10 @@ export default async function MovieDetailPage({ params }: PageProps) {
                   </Button>
                 ))}
                 {movie.countries.map((country) => (
-                  <Button key={country.slug} asChild variant="ghost" size="sm">
-                    <Link href={`/quoc-gia/${country.slug}`}>{country.name}</Link>
+                  <Button key={country.slug} asChild variant="secondary" size="sm">
+                    <Link href={`/quoc-gia/${country.slug}`}>
+                      {country.name}
+                    </Link>
                   </Button>
                 ))}
               </section>
@@ -126,12 +164,24 @@ export default async function MovieDetailPage({ params }: PageProps) {
               <CardContent className="flex flex-col gap-5">
                 {episodes.length ? (
                   episodes.map((server, serverIndex) => (
-                    <div key={`${server.serverName}-${serverIndex}`} className="flex flex-col gap-3">
-                      <h3 className="text-sm font-medium text-muted-foreground">{server.serverName}</h3>
+                    <div
+                      key={`${server.serverName}-${serverIndex}`}
+                      className="flex flex-col gap-3"
+                    >
+                      <h3 className="text-sm font-medium text-muted-foreground">
+                        {server.serverName}
+                      </h3>
                       <div className="flex flex-wrap gap-2">
                         {server.serverData.map((episode, episodeIndex) => (
-                          <Button key={`${episode.slug}-${episodeIndex}`} asChild variant="secondary" size="sm">
-                            <Link href={`/xem/${movie.slug}?server=${serverIndex}&episode=${episodeIndex}`}>
+                          <Button
+                            key={`${episode.slug}-${episodeIndex}`}
+                            asChild
+                            variant="secondary"
+                            size="sm"
+                          >
+                            <Link
+                              href={`/xem/${movie.slug}?server=${serverIndex}&episode=${episodeIndex}`}
+                            >
                               Tập {episode.name}
                             </Link>
                           </Button>
@@ -140,7 +190,9 @@ export default async function MovieDetailPage({ params }: PageProps) {
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm text-muted-foreground">Phim chưa có tập phát.</p>
+                  <p className="text-sm text-muted-foreground">
+                    Phim chưa có tập phát.
+                  </p>
                 )}
               </CardContent>
             </Card>

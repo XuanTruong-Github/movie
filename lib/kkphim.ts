@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 
 import type {
   EpisodeItem,
@@ -106,14 +107,15 @@ function normalizeEpisodeServer(value: unknown): EpisodeServer {
   };
 }
 
-async function fetchJson(path: string, init?: RequestInit) {
+async function fetchJson(path: string, revalidate: number | false = 300) {
+  const cacheOption: RequestInit =
+    revalidate === false
+      ? { cache: "no-store" }
+      : ({ next: { revalidate } } as RequestInit);
+
   const response = await fetch(`${KKPHIM_BASE_URL}${path}`, {
-    ...init,
-    next: { revalidate: 300, ...(init?.next ?? {}) },
-    headers: {
-      Accept: "application/json",
-      ...(init?.headers ?? {}),
-    },
+    ...cacheOption,
+    headers: { Accept: "application/json" },
   });
 
   if (!response.ok) {
@@ -138,7 +140,7 @@ function listFromPayload(payload: unknown, page: number, fallbackTitle: string):
 
 export async function getLatestMovies(page = 1) {
   return listFromPayload(
-    await fetchJson(`/danh-sach/phim-moi-cap-nhat?page=${page}`),
+    await fetchJson(`/danh-sach/phim-moi-cap-nhat?page=${page}`, 180),
     page,
     "Phim mới cập nhật",
   );
@@ -150,18 +152,18 @@ export async function getMoviesByType(type: string, page = 1) {
 
 export async function searchMovies(keyword: string, page = 1) {
   const query = new URLSearchParams({ keyword, page: String(page) });
-  return listFromPayload(await fetchJson(`/v1/api/tim-kiem?${query}`), page, `Tìm kiếm: ${keyword}`);
+  return listFromPayload(await fetchJson(`/v1/api/tim-kiem?${query}`, false), page, `Tìm kiếm: ${keyword}`);
 }
 
-export async function getCategories(): Promise<TaxonomyItem[]> {
-  const payload = await fetchJson("/the-loai");
+export const getCategories = cache(async (): Promise<TaxonomyItem[]> => {
+  const payload = await fetchJson("/the-loai", 3600);
   return normalizeTaxonomy(payload);
-}
+});
 
-export async function getCountries(): Promise<TaxonomyItem[]> {
-  const payload = await fetchJson("/quoc-gia");
+export const getCountries = cache(async (): Promise<TaxonomyItem[]> => {
+  const payload = await fetchJson("/quoc-gia", 3600);
   return normalizeTaxonomy(payload);
-}
+});
 
 export async function getMoviesByCategory(slug: string, page = 1) {
   return listFromPayload(await fetchJson(`/v1/api/the-loai/${slug}?page=${page}`), page, "Phim theo thể loại");
@@ -171,12 +173,12 @@ export async function getMoviesByCountry(slug: string, page = 1) {
   return listFromPayload(await fetchJson(`/v1/api/quoc-gia/${slug}?page=${page}`), page, "Phim theo quốc gia");
 }
 
-export async function getMovieDetail(slug: string): Promise<MovieDetailResult> {
-  const payload = asRecord(await fetchJson(`/phim/${slug}`));
+export const getMovieDetail = cache(async (slug: string): Promise<MovieDetailResult> => {
+  const payload = asRecord(await fetchJson(`/phim/${slug}`, 600));
   return {
     movie: normalizeMovieDetail(payload.movie),
     episodes: Array.isArray(payload.episodes) ? payload.episodes.map(normalizeEpisodeServer) : [],
   };
-}
+});
 
 export { movieTypes } from "@/lib/movie-types";

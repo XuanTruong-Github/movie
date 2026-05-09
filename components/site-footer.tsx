@@ -41,8 +41,8 @@ export function SiteFooter() {
                 {section.title}
               </h3>
               <ul className="space-y-2">
-                {section.links.map((link) => (
-                  <li key={link.href}>
+                {section.links.map((link, index) => (
+                  <li key={index}>
                     <Link
                       href={link.href}
                       className="text-sm text-muted-foreground hover:text-primary transition-colors"
