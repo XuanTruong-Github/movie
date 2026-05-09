@@ -19,15 +19,6 @@ const footerLinks = {
       { label: "Tìm kiếm", href: "/tim-kiem" },
     ],
   },
-  info: {
-    title: "Thông tin",
-    links: [
-      { label: "Về chúng tôi", href: "#" },
-      { label: "Liên hệ", href: "#" },
-      { label: "Điều khoản sử dụng", href: "#" },
-      { label: "Chính sách riêng tư", href: "#" },
-    ],
-  },
 };
 
 export function SiteFooter() {
@@ -67,7 +58,7 @@ export function SiteFooter() {
       <div className="border-t border-border bg-background py-4 px-3">
         <div className="container text-center">
           <p className="text-xs text-muted-foreground">
-            © 2024 TruongLX-Movie. Powered by
+            © 2026 TruongLX-Movie. Powered by
           </p>
         </div>
       </div>

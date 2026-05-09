@@ -182,7 +182,7 @@ export default async function MovieDetailPage({ params }: PageProps) {
                             <Link
                               href={`/xem/${movie.slug}?server=${serverIndex}&episode=${episodeIndex}`}
                             >
-                              Tập {episode.name}
+                              {episode.name}
                             </Link>
                           </Button>
                         ))}
