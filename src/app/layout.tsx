@@ -21,8 +21,8 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: "TruongLx-Movie — Xem phim trực tuyến",
-    template: "%s | TruongLx-Movie",
+    default: "TruongLX-Movie — Xem phim trực tuyến",
+    template: "%s | TruongLX-Movie",
   },
   description:
     "Xem phim trực tuyến chất lượng cao. Phim lẻ, phim bộ, hoạt hình và nhiều hơn nữa.",

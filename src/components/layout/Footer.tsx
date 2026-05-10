@@ -13,7 +13,7 @@ export function Footer({ genres, countries }: FooterProps) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
             <span className="font-display text-xl font-bold text-[#e8d5b7]">
-              TruongLx-Movie
+              TruongLX-Movie
             </span>
             <p className="mt-3 text-xs text-white/30 leading-relaxed">
               Xem phim trực tuyến chất lượng cao. Phim lẻ, phim bộ, hoạt hình và nhiều hơn nữa.
@@ -83,7 +83,7 @@ export function Footer({ genres, countries }: FooterProps) {
 
         <div className="mt-10 pt-6 border-t border-white/[0.05] flex flex-col sm:flex-row justify-between items-center gap-2">
           <p className="text-xs text-white/20">
-            © {new Date().getFullYear()} TruongLx-Movie.
+            © {new Date().getFullYear()} TruongLX-Movie.
           </p>
           <p className="text-xs text-white/20">
             Chỉ dành cho mục đích giải trí.
