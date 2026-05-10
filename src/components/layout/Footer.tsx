@@ -30,7 +30,7 @@ export function Footer({ genres, countries }: FooterProps) {
                 { href: "/danh-sach/phim-le", label: "Phim lẻ" },
                 { href: "/danh-sach/tv-shows", label: "TV Shows" },
                 { href: "/danh-sach/hoat-hinh", label: "Hoạt hình" },
-                { href: "/danh-sach/phim-sap-chieu", label: "Sắp chiếu" },
+                { href: "/danh-sach/phim-sap-chieu", label: "Phim chiếu rạp" },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link

@@ -66,7 +66,7 @@ async function apiFetchV1(url: string, init?: RequestInit): Promise<ListResponse
 
 export async function fetchLatestMovies(page = 1): Promise<ListResponse> {
   const raw = await apiFetch<RawLatestResponse>(
-    `${BASE_URL}/danh-sach/phim-moi-cap-nhat?page=${page}&limit=12`,
+    `${BASE_URL}/danh-sach/phim-moi-cap-nhat?page=${page}`,
     { next: { revalidate: REVALIDATE_LATEST } }
   );
   return {

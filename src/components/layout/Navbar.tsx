@@ -36,8 +36,8 @@ export function Navbar({ genres }: NavbarProps) {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled
-          ? "bg-[#0d0d0d]/95 backdrop-blur-xl border-b border-white/[0.06]"
-          : "bg-gradient-to-b from-black/70 to-transparent"
+          ? "bg-[#0d0d0d]/95 backdrop-blur-xl border-b border-white/6"
+          : "bg-linear-to-b from-black/70 to-transparent"
       )}
     >
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,7 +45,7 @@ export function Navbar({ genres }: NavbarProps) {
           {/* Logo */}
           <Link
             href="/"
-            className="font-display text-xl font-bold tracking-wide text-[#e8d5b7] hover:opacity-80 transition-opacity shrink-0"
+            className="font-display text-xl font-bold tracking-wide text-cinema-accent hover:opacity-80 transition-opacity shrink-0"
           >
             TruongLX-Movie
           </Link>
@@ -79,6 +79,15 @@ export function Navbar({ genres }: NavbarProps) {
             >
               Phim lẻ
             </Link>
+            <Link
+              href="/danh-sach/phim-sap-chieu"
+              className={cn(
+                "text-sm transition-colors hover:text-white",
+                pathname.startsWith("/danh-sach/phim-sap-chieu") ? "text-white" : "text-white/60"
+              )}
+            >
+              Phim chiếu rạp
+            </Link>
 
             {/* Genres dropdown */}
             <div className="relative group">
@@ -86,7 +95,7 @@ export function Navbar({ genres }: NavbarProps) {
                 Thể loại
                 <span className="text-xs opacity-60">▾</span>
               </button>
-              <div className="absolute top-full left-0 mt-2 w-64 bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2 grid grid-cols-2 gap-0.5">
+              <div className="absolute top-full left-0 mt-2 w-64 bg-cinema-surface/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2 grid grid-cols-2 gap-0.5">
                 {genres.slice(0, 20).map((g) => (
                   <Link
                     key={g.slug}
@@ -132,7 +141,7 @@ export function Navbar({ genres }: NavbarProps) {
             >
               <Heart className="w-5 h-5" />
               {favorites.length > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#e8d5b7]" />
+                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-cinema-accent" />
               )}
             </Link>
 
@@ -157,7 +166,7 @@ export function Navbar({ genres }: NavbarProps) {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden bg-[#0d0d0d]/98 backdrop-blur-xl border-t border-white/[0.06]">
+        <div className="md:hidden bg-[#0d0d0d]/98 backdrop-blur-xl border-t border-white/6">
           <nav className="px-4 py-4 flex flex-col gap-1">
             {[
               { href: "/", label: "Trang chủ" },
