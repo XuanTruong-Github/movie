@@ -1,4 +1,4 @@
-import { HeroBanner } from "@/components/hero-banner";
+import { HeroBannerCarousel } from "@/components/hero-banner-carousel";
 import { MovieCarousel } from "@/components/movie-carousel";
 import { getLatestMovies, getMoviesByType } from "@/lib/kkphim";
 
@@ -15,11 +15,11 @@ export default async function HomePage() {
   const cinema = cinemaRes.status === "fulfilled" ? cinemaRes.value.items : [];
   const anime = animeRes.status === "fulfilled" ? animeRes.value.items : [];
 
-  const heroMovie = cinema[0] ?? latest[0] ?? null;
+  const heroMovies = (cinema.length > 0 ? cinema : latest).slice(0, 5);
 
   return (
     <div className="min-h-screen bg-black">
-      {heroMovie && <HeroBanner movie={heroMovie} />}
+      {heroMovies.length > 0 && <HeroBannerCarousel movies={heroMovies} />}
 
       <div className="pb-10">
         {cinema.length > 0 && (

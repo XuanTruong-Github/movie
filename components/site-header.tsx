@@ -114,12 +114,14 @@ export function SiteHeader({ categories, countries }: SiteHeaderProps) {
     >
       <div className="mx-auto flex h-16 max-w-screen-2xl items-center gap-6 px-4 sm:px-6">
         {/* Logo */}
-        <Link href="/" className="shrink-0 select-none" aria-label="TruongLX-Movie">
-          <span className="text-lg font-semibold tracking-[0.12em] text-white">
-            TRUONGLX
-            <span style={{ color: "rgba(255,255,255,0.35)" }}>-</span>
-            MOVIE
-          </span>
+        <Link
+          href="/"
+          className="shrink-0 select-none"
+          aria-label="TruongLX-Movie"
+        >
+          <h1 className="text-lg font-bold tracking-[0.12em] text-white">
+            TRUONG-LX
+          </h1>
         </Link>
 
         {/* Nav links */}
@@ -131,18 +133,30 @@ export function SiteHeader({ categories, countries }: SiteHeaderProps) {
               className="px-3 py-1.5 text-sm transition-colors duration-200"
               style={{ color: "rgba(255,255,255,0.65)" }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.65)")}
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = "rgba(255,255,255,0.65)")
+              }
             >
               {type.label}
             </Link>
           ))}
 
           {categories.length > 0 && (
-            <NavDropdown label="Thể loại" items={categories} basePath="the-loai" cols={4} />
+            <NavDropdown
+              label="Thể loại"
+              items={categories}
+              basePath="the-loai"
+              cols={4}
+            />
           )}
 
           {countries.length > 0 && (
-            <NavDropdown label="Quốc gia" items={countries} basePath="quoc-gia" cols={3} />
+            <NavDropdown
+              label="Quốc gia"
+              items={countries}
+              basePath="quoc-gia"
+              cols={3}
+            />
           )}
         </nav>
 
@@ -154,7 +168,9 @@ export function SiteHeader({ categories, countries }: SiteHeaderProps) {
             className="p-2 transition-colors duration-200"
             style={{ color: "rgba(255,255,255,0.6)" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "rgba(255,255,255,0.6)")
+            }
             aria-label="Phim yêu thích"
           >
             <HeartIcon className="size-4" />
@@ -164,7 +180,9 @@ export function SiteHeader({ categories, countries }: SiteHeaderProps) {
             className="p-2 transition-colors duration-200"
             style={{ color: "rgba(255,255,255,0.6)" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "rgba(255,255,255,0.6)")
+            }
             aria-label="Lịch sử xem"
           >
             <HistoryIcon className="size-4" />

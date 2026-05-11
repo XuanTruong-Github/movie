@@ -12,10 +12,11 @@ export function SiteFooter() {
           {/* Brand */}
           <div className="flex flex-col gap-2">
             <span className="text-base font-semibold tracking-[0.12em] text-white">
-              TRUONGLX<span style={{ color: "rgba(255,255,255,0.3)" }}>-</span>MOVIE
+              TRUONG-LX
             </span>
             <p className="text-xs max-w-xs" style={{ color: "#8e8e93" }}>
-              Xem phim online miễn phí. Phim lẻ, phim bộ, hoạt hình, phim chiếu rạp chất lượng cao.
+              Xem phim online miễn phí. Phim lẻ, phim bộ, hoạt hình, phim chiếu
+              rạp chất lượng cao.
             </p>
           </div>
 
@@ -55,7 +56,7 @@ export function SiteFooter() {
             color: "#8e8e93",
           }}
         >
-          © {new Date().getFullYear()} TruongLX-Movie. Dữ liệu từ KKPhim API.
+          © {new Date().getFullYear()} TRUONG-LX.
         </div>
       </div>
     </footer>
