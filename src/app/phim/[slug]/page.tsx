@@ -60,7 +60,7 @@ export default async function MovieDetailPage({ params }: PageProps) {
             src={posterUrl}
             alt=""
             fill
-            className="object-cover scale-110 opacity-20"
+            className="object-cover scale-110 opacity-50"
             priority
             sizes="100vw"
           />
