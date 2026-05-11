@@ -20,7 +20,7 @@ function HomeSection({
 }) {
   if (!movies?.length) return null;
   return (
-    <section className="container mx-auto px-4 space-y-4">
+    <section className="container mx-auto px-4 space-y-4 py-10">
       <div className="flex items-center justify-between">
         <h2 className="font-display text-xl sm:text-2xl font-semibold text-white/90 italic">
           {title}

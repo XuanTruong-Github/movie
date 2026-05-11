@@ -46,12 +46,12 @@ export function EpisodeList({
         {episodes.map((server) => (
           <TabsContent key={server.server_name} value={server.server_name}>
             <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2 max-h-72 overflow-y-auto pr-1 scrollbar-hide">
-              {server.server_data.map((ep) => {
+              {server.server_data.map((ep, index) => {
                 const isActive = ep.slug === currentEpisodeSlug;
                 const watched = isWatched(movieSlug, ep.slug);
                 return (
                   <button
-                    key={ep.slug}
+                    key={index}
                     onClick={() =>
                       router.push(`/xem/${movieSlug}?tap=${ep.slug}`)
                     }
