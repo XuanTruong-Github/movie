@@ -33,7 +33,7 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
           src={thumbUrl}
           alt={movie.name}
           fill
-          className="object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-75"
+          className="object-cover transition-all duration-300 group-hover:brightness-75"
           sizes="(max-width: 640px) 150px, 170px"
           priority={priority}
         />
@@ -78,7 +78,7 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
       </div>
 
       {/* Title below card */}
-      <div className="mt-2 px-0.5">
+      <div className="mt-2 px-0.5 lg:hidden">
         <p className="text-white/80 text-xs font-medium line-clamp-2 leading-snug group-hover:text-white transition-colors">
           {movie.name}
         </p>

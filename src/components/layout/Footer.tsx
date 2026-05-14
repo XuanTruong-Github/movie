@@ -9,7 +9,7 @@ interface FooterProps {
 export function Footer({ genres, countries }: FooterProps) {
   return (
     <footer className="border-t border-white/[0.06] mt-20 bg-[#0a0a0a]">
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
             <span className="font-display text-xl font-bold text-[#e8d5b7]">

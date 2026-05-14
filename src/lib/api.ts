@@ -59,15 +59,21 @@ async function apiFetch<T>(url: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-async function apiFetchV1(url: string, init?: RequestInit): Promise<ListResponse> {
+async function apiFetchV1(
+  url: string,
+  init?: RequestInit,
+): Promise<ListResponse> {
   const raw = await apiFetch<RawV1Response>(url, init);
   return normalizeV1(raw);
 }
 
-export async function fetchLatestMovies(page = 1): Promise<ListResponse> {
+export async function fetchLatestMovies(
+  page = 1,
+  limit = 20,
+): Promise<ListResponse> {
   const raw = await apiFetch<RawLatestResponse>(
-    `${BASE_URL}/danh-sach/phim-moi-cap-nhat?page=${page}`,
-    { next: { revalidate: REVALIDATE_LATEST } }
+    `${BASE_URL}/danh-sach/phim-moi-cap-nhat?page=${page}&limit=${limit}`,
+    { next: { revalidate: REVALIDATE_LATEST } },
   );
   return {
     status: Boolean(raw.status),
@@ -82,53 +88,65 @@ export function fetchMovieDetail(slug: string): Promise<MovieDetailResponse> {
   });
 }
 
-export function fetchMoviesByGenre(slug: string, page = 1): Promise<ListResponse> {
+export function fetchMoviesByGenre(
+  slug: string,
+  page = 1,
+  limit = 20,
+): Promise<ListResponse> {
   return apiFetchV1(
-    `${BASE_URL}/v1/api/the-loai/${slug}?page=${page}`,
-    { next: { revalidate: REVALIDATE_LIST } }
+    `${BASE_URL}/v1/api/the-loai/${slug}?page=${page}&limit=${limit}`,
+    {
+      next: { revalidate: REVALIDATE_LIST },
+    },
   );
 }
 
-export function fetchMoviesByCountry(slug: string, page = 1): Promise<ListResponse> {
+export function fetchMoviesByCountry(
+  slug: string,
+  page = 1,
+  limit = 20,
+): Promise<ListResponse> {
   return apiFetchV1(
-    `${BASE_URL}/v1/api/quoc-gia/${slug}?page=${page}`,
-    { next: { revalidate: REVALIDATE_LIST } }
+    `${BASE_URL}/v1/api/quoc-gia/${slug}?page=${page}&limit=${limit}`,
+    {
+      next: { revalidate: REVALIDATE_LIST },
+    },
   );
 }
 
-export function fetchSearch(keyword: string, page = 1): Promise<ListResponse> {
+export function fetchSearch(
+  keyword: string,
+  page = 1,
+  limit = 20,
+): Promise<ListResponse> {
   const encoded = encodeURIComponent(keyword);
   return apiFetchV1(
-    `${BASE_URL}/v1/api/tim-kiem?keyword=${encoded}&page=${page}`,
-    { cache: "no-store" }
+    `${BASE_URL}/v1/api/tim-kiem?keyword=${encoded}&page=${page}&limit=${limit}`,
+    { cache: "no-store" },
   );
 }
 
-export function fetchSeriesList(page = 1): Promise<ListResponse> {
+export function fetchSeriesList(page = 1, limit = 20): Promise<ListResponse> {
   return apiFetchV1(
-    `${BASE_URL}/v1/api/danh-sach/phim-bo?page=${page}&limit=12`,
-    { next: { revalidate: REVALIDATE_LATEST } }
+    `${BASE_URL}/v1/api/danh-sach/phim-bo?page=${page}&limit=${limit}`,
+    { next: { revalidate: REVALIDATE_LATEST } },
   );
 }
 
-export function fetchStandaloneList(page = 1): Promise<ListResponse> {
+export function fetchStandaloneList(
+  page = 1,
+  limit = 20,
+): Promise<ListResponse> {
   return apiFetchV1(
-    `${BASE_URL}/v1/api/danh-sach/phim-le?page=${page}&limit=12`,
-    { next: { revalidate: REVALIDATE_LATEST } }
+    `${BASE_URL}/v1/api/danh-sach/phim-le?page=${page}&limit=${limit}`,
+    { next: { revalidate: REVALIDATE_LATEST } },
   );
 }
 
-export function fetchComingSoon(page = 1): Promise<ListResponse> {
+export function fetchCinema(page = 1, limit = 12): Promise<ListResponse> {
   return apiFetchV1(
-    `${BASE_URL}/v1/api/danh-sach/phim-sap-chieu?page=${page}&limit=12`,
-    { next: { revalidate: REVALIDATE_COMING_SOON } }
-  );
-}
-
-export function fetchTvShows(page = 1): Promise<ListResponse> {
-  return apiFetchV1(
-    `${BASE_URL}/v1/api/danh-sach/tv-shows?page=${page}`,
-    { next: { revalidate: REVALIDATE_LIST } }
+    `${BASE_URL}/v1/api/danh-sach/phim-chieu-rap?page=${page}&limit=${limit}`,
+    { next: { revalidate: REVALIDATE_COMING_SOON } },
   );
 }
 

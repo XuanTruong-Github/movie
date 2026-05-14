@@ -40,7 +40,7 @@ export function Navbar({ genres }: NavbarProps) {
           : "bg-linear-to-b from-black/70 to-transparent"
       )}
     >
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link

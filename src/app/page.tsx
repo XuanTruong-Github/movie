@@ -1,12 +1,6 @@
-import { MovieGrid } from "@/components/movie/MovieGrid";
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
-import {
-  fetchComingSoon,
-  fetchLatestMovies,
-  fetchSeriesList,
-  fetchStandaloneList,
-} from "@/lib/api";
+import { MovieCarousel } from "@/components/movie/MovieCarousel";
+import { MovieHero } from "@/components/movie/MovieHero";
+import { fetchCinema, fetchSeriesList, fetchStandaloneList } from "@/lib/api";
 import type { MovieItem } from "@/lib/types";
 
 function HomeSection({
@@ -20,34 +14,34 @@ function HomeSection({
 }) {
   if (!movies?.length) return null;
   return (
-    <section className="container mx-auto px-4 space-y-4 py-10">
-      <div className="flex items-center justify-between">
-        <h2 className="font-display text-xl sm:text-2xl font-semibold text-white/90 italic">
-          {title}
-        </h2>
-        {viewAllHref && (
-          <Link
-            href={viewAllHref}
-            className="flex items-center gap-1 text-sm text-cinema-accent/70 hover:text-cinema-accent transition-colors"
-          >
-            Xem thêm
-            <ChevronRight className="w-4 h-4" />
-          </Link>
-        )}
-      </div>
-      <MovieGrid movies={movies} />
+    <section className="container mx-auto px-4 py-10">
+      <MovieCarousel title={title} movies={movies} viewAllHref={viewAllHref} />
     </section>
   );
 }
 
 export default async function HomePage() {
-  const latest = await fetchLatestMovies(1);
-
+  const phimChieuRap = await fetchCinema();
+  const phimBo = await fetchSeriesList(); // Thay bằng API thực tế cho phim bộ
+  const phimLe = await fetchStandaloneList(); // Thay bằng API thực tế cho phim lẻ
   return (
-    <HomeSection
-      title="Phim Mới Cập Nhật"
-      movies={latest.items ?? []}
-      viewAllHref="/danh-sach/phim-moi"
-    />
+    <>
+      <MovieHero movies={phimChieuRap.items ?? []} />
+      <HomeSection
+        title="Phim Chiếu Rạp"
+        movies={phimChieuRap.items ?? []}
+        viewAllHref="/danh-sach/phim-chieu-rap"
+      />
+      <HomeSection
+        title="Phim Bộ"
+        movies={phimBo.items ?? []}
+        viewAllHref="/danh-sach/phim-bo"
+      />
+      <HomeSection
+        title="Phim Lẻ"
+        movies={phimLe.items ?? []}
+        viewAllHref="/danh-sach/phim-le"
+      />
+    </>
   );
 }
