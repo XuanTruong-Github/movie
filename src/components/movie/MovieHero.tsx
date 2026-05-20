@@ -51,12 +51,12 @@ export function MovieHero({ movies }: MovieHeroProps) {
             return (
               <CarouselItem key={movie._id} className="pl-0 basis-full">
                 <div className="relative w-full h-[70vh] min-h-120 flex items-end overflow-hidden">
-                  <div className="absolute right-0 top-0 bottom-0 w-full hidden md:block pointer-events-none">
+                  <div className="absolute right-0 top-0 bottom-0 w-full pointer-events-none">
                     <Image
                       src={posterUrl}
                       alt={movie.name}
                       fill
-                      className="object-cover object-center opacity-30"
+                      className="object-cover object-center opacity-50"
                       sizes="50vw"
                       priority={i === 0}
                     />

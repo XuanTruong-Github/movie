@@ -22,7 +22,7 @@ const playfairDisplay = Playfair_Display({
 export const metadata: Metadata = {
   title: {
     default: "Xem phim trực tuyến",
-    template: "%s | TRUONG-LX",
+    template: "%s | OPhim",
   },
   description:
     "Xem phim trực tuyến chất lượng cao. Phim lẻ, phim bộ, hoạt hình và nhiều hơn nữa.",
@@ -45,6 +45,9 @@ export default async function RootLayout({
       className={`${dmSans.variable} ${playfairDisplay.variable} dark`}
       suppressHydrationWarning
     >
+      <head>
+        <meta name="apple-mobile-web-app-title" content="OPhim" />
+      </head>
       <body className="min-h-screen bg-[#0d0d0d] text-white antialiased">
         <Providers>
           <Navbar genres={genres} />

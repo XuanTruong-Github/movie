@@ -47,7 +47,7 @@ export function Navbar({ genres }: NavbarProps) {
             href="/"
             className="font-display text-xl font-bold tracking-wide text-cinema-accent hover:opacity-80 transition-opacity shrink-0"
           >
-            TRUONG-LX
+            OPhim
           </Link>
 
           {/* Desktop nav */}
