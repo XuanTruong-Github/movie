@@ -65,7 +65,7 @@ export default async function WatchPage({ params, searchParams }: PageProps) {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="mx-auto max-w-screen-xl px-4 py-4 sm:px-6">
+      <div className="mx-auto container px-4 py-4 sm:px-6">
         {/* Back link */}
         <Link
           href={`/phim/${slug}`}

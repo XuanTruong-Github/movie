@@ -23,8 +23,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const countries = countriesResult.status === "fulfilled" ? countriesResult.value : [];
 
   return (
-    <html lang="vi" className="h-full">
-      <body className="min-h-full flex flex-col bg-black text-white">
+    <html lang="vi" className="h-full bg-black">
+      <body className="min-h-full flex flex-col text-white">
         <SiteHeader categories={categories} countries={countries} />
         <main className="flex-1">{children}</main>
         <SiteFooter />

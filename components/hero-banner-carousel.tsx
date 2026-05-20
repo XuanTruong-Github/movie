@@ -27,7 +27,7 @@ export function HeroBannerCarousel({ movies }: { movies: MovieSummary[] }) {
   const scrollNext = useCallback(() => api?.scrollNext(), [api]);
 
   return (
-    <div className="relative h-[72vh] min-h-[500px] max-h-[760px] w-full overflow-hidden">
+    <div className="relative h-[72vh] min-h-[500px] max-h-[760px] w-full ">
       <Carousel opts={{ loop: true }} setApi={setApi} className="h-full">
         <CarouselContent className="!ml-0 h-full">
           {movies.map((movie, i) => {
@@ -49,12 +49,12 @@ export function HeroBannerCarousel({ movies }: { movies: MovieSummary[] }) {
                   />
                 )}
 
-                <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black via-black/20 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent" />
 
                 <div className="absolute inset-0 flex items-end pb-16 sm:pb-20">
-                  <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6">
+                  <div className="mx-auto w-full container px-4 sm:px-6">
                     <div className="max-w-lg">
                       <h1 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl">
                         {movie.name}
@@ -149,7 +149,7 @@ export function HeroBannerCarousel({ movies }: { movies: MovieSummary[] }) {
       </button>
 
       {/* Dot indicators */}
-      <div className="absolute bottom-6 right-6 z-10 flex gap-1.5">
+      <div className="flex gap-1.5 container mx-auto px-4 md:px-6">
         {movies.map((_, i) => (
           <button
             key={i}
@@ -157,7 +157,7 @@ export function HeroBannerCarousel({ movies }: { movies: MovieSummary[] }) {
             aria-label={`Slide ${i + 1}`}
             className={cn(
               "h-1.5 rounded-full transition-all duration-300",
-              i === current ? "w-6 bg-white" : "w-1.5 bg-white/40"
+              i === current ? "w-6 bg-white" : "w-1.5 bg-white/40",
             )}
           />
         ))}
