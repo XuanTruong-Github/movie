@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  ophim:
+  kkphim:
     build: .
-    container_name: ophim-web
+    container_name: kkphim-web
     ports:
-      - "2000:3000"
+      - "1999:3000"
     restart: unless-stopped
     environment:
       - NODE_ENV=production
