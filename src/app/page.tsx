@@ -1,6 +1,6 @@
 import { MovieCarousel } from "@/components/movie/MovieCarousel";
-import { MovieHero } from "@/components/movie/MovieHero";
-import { fetchCinema, fetchSeriesList, fetchStandaloneList } from "@/lib/api";
+import { ContinueWatching } from "@/components/movie/ContinueWatching";
+import { fetchCinema, fetchSeriesList, fetchStandaloneList, fetchMoviesByGenre, fetchMoviesByCountry } from "@/lib/api";
 import type { MovieItem } from "@/lib/types";
 
 function HomeSection({
@@ -22,15 +22,27 @@ function HomeSection({
 
 export default async function HomePage() {
   const phimChieuRap = await fetchCinema();
+  const phimHanhDong = await fetchMoviesByGenre("hanh-dong");
+  const phimHanQuoc = await fetchMoviesByCountry("han-quoc");
   const phimBo = await fetchSeriesList(); // Thay bằng API thực tế cho phim bộ
   const phimLe = await fetchStandaloneList(); // Thay bằng API thực tế cho phim lẻ
   return (
     <>
-      <MovieHero movies={phimChieuRap.items ?? []} />
+      <ContinueWatching />
       <HomeSection
         title="Phim Chiếu Rạp"
         movies={phimChieuRap.items ?? []}
         viewAllHref="/danh-sach/phim-chieu-rap"
+      />
+      <HomeSection
+        title="Phim Hành Động"
+        movies={phimHanhDong.items ?? []}
+        viewAllHref="/the-loai/hanh-dong"
+      />
+      <HomeSection
+        title="Phim Hàn Quốc"
+        movies={phimHanQuoc.items ?? []}
+        viewAllHref="/quoc-gia/han-quoc"
       />
       <HomeSection
         title="Phim Bộ"

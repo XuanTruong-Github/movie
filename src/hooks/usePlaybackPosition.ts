@@ -6,11 +6,12 @@ function storageKey(movieSlug: string, episodeSlug: string) {
 }
 
 export function usePlaybackPosition() {
-  function savePosition(movieSlug: string, episodeSlug: string, position: number) {
+  function savePosition(movieSlug: string, episodeSlug: string, position: number, duration?: number) {
     if (position < 5) return;
     try {
       localStorage.setItem(storageKey(movieSlug, episodeSlug), JSON.stringify({
         position,
+        duration: duration || 0,
         savedAt: Date.now(),
       }));
     } catch {}
@@ -31,11 +32,26 @@ export function usePlaybackPosition() {
     }
   }
 
+  function getPositionInfo(movieSlug: string, episodeSlug: string): { position: number; duration: number } {
+    try {
+      const raw = localStorage.getItem(storageKey(movieSlug, episodeSlug));
+      if (!raw) return { position: 0, duration: 0 };
+      const { position, duration, savedAt } = JSON.parse(raw);
+      if (Date.now() - savedAt > EXPIRE_MS) {
+        localStorage.removeItem(storageKey(movieSlug, episodeSlug));
+        return { position: 0, duration: 0 };
+      }
+      return { position: position ?? 0, duration: duration ?? 0 };
+    } catch {
+      return { position: 0, duration: 0 };
+    }
+  }
+
   function clearPosition(movieSlug: string, episodeSlug: string) {
     try {
       localStorage.removeItem(storageKey(movieSlug, episodeSlug));
     } catch {}
   }
 
-  return { savePosition, getPosition, clearPosition };
+  return { savePosition, getPosition, getPositionInfo, clearPosition };
 }

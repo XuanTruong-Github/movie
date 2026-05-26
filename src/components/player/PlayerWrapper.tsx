@@ -22,7 +22,7 @@ interface PlayerWrapperProps {
   poster?: string;
   title?: string;
   initialTime?: number;
-  onTimeUpdate?: (time: number) => void;
+  onTimeUpdate?: (time: number, duration: number) => void;
   onEnded?: () => void;
 }
 

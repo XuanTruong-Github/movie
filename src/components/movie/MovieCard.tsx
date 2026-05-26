@@ -10,17 +10,9 @@ interface MovieCardProps {
   priority?: boolean;
 }
 
-const qualityColors: Record<string, string> = {
-  FHD: "bg-blue-500/80 text-white",
-  HD: "bg-green-600/80 text-white",
-  SD: "bg-yellow-600/80 text-white",
-  CAM: "bg-amber-600/80 text-white",
-};
-
 export function MovieCard({ movie, priority = false }: MovieCardProps) {
   const thumbUrl = buildImageUrl(movie.thumb_url);
   const isTrailer = movie.episode_current?.toLowerCase() === "trailer";
-  const qualityKey = movie.quality?.toUpperCase();
 
   return (
     <Link
@@ -49,13 +41,8 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
             </Badge>
           ) : (
             <>
-              {qualityKey && qualityColors[qualityKey] && (
-                <Badge className={cn(qualityColors[qualityKey], "text-[9px] px-1.5 py-0 leading-5")}>
-                  {qualityKey}
-                </Badge>
-              )}
               {movie.episode_current && (
-                <Badge className="bg-black/70 text-white/80 text-[9px] px-1.5 py-0 leading-5">
+                <Badge className="bg-red-600 text-white font-bold text-[9px] px-1.5 py-0 leading-5">
                   {movie.episode_current}
                 </Badge>
               )}

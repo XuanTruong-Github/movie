@@ -15,13 +15,13 @@ interface VideoPlayerProps {
   poster?: string;
   className?: string;
   initialTime?: number;
-  onTimeUpdate?: (time: number) => void;
+  onTimeUpdate?: (time: number, duration: number) => void;
   onEnded?: () => void;
 }
 
 function PositionTracker({ initialTime = 0, onTimeUpdate, onEnded }: {
   initialTime?: number;
-  onTimeUpdate?: (time: number) => void;
+  onTimeUpdate?: (time: number, duration: number) => void;
   onEnded?: () => void;
 }) {
   const media = useMedia() as Video | null;
@@ -43,9 +43,10 @@ function PositionTracker({ initialTime = 0, onTimeUpdate, onEnded }: {
 
     const handleTimeUpdate = () => {
       const now = media.currentTime;
+      const duration = media.duration || 0;
       if (now - lastSavedRef.current >= 5) {
         lastSavedRef.current = now;
-        onTimeUpdateRef.current?.(now);
+        onTimeUpdateRef.current?.(now, duration);
       }
     };
 

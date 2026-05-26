@@ -86,7 +86,7 @@ function WatchContent({ slug }: { slug: string }) {
     : null;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       <Link
         href={`/phim/${movie.slug}`}
         className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/80 transition-colors"
@@ -110,7 +110,7 @@ function WatchContent({ slug }: { slug: string }) {
             poster={posterUrl}
             title={`${movie.name} - Tập ${episode.name}`}
             initialTime={initialTime}
-            onTimeUpdate={(t) => savePosition(slug, episode.slug, t)}
+            onTimeUpdate={(t, d) => savePosition(slug, episode.slug, t, d)}
             onEnded={() => clearPosition(slug, episode.slug)}
           />
         )}
