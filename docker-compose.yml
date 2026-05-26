@@ -1,11 +1,13 @@
-version: '3.8'
-
 services:
   kkphim:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: kkphim-web
     ports:
-      - "1999:3000"
-    restart: unless-stopped
+      - "1999:1999"
     environment:
-      - NODE_ENV=production
+      NODE_ENV: production
+      PORT: 1999
+      HOSTNAME: 0.0.0.0
+    restart: unless-stopped
